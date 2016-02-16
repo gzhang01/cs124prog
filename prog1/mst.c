@@ -37,12 +37,14 @@ void generateMST(int n, int d, edge *tree[n * (n - 1) / 2], edge *mst[n - 1]) {
 
     // Find edges of MST
     int foundEdges = 0;
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < edges; i++) {
+        // If roots are not the same, join them and add edge to MST
         if (find(sets[tree[i]->p1]) != find(sets[tree[i]->p2])) {
             mst[foundEdges] = tree[i];
             join(sets[tree[i]->p1], sets[tree[i]->p2]);
             foundEdges++;
-            if (foundEdges == n) {
+            // Break if we've found n - 1 edges (num edges in MST)
+            if (foundEdges == n - 1) {
                 break;
             }
         }
@@ -117,9 +119,15 @@ void printMST(int n, edge *mst[n - 1]) {
     }
 }
 
-int main(void) {
-	int n = 5;
-	int d = 0;
+int main(int argc, char *argv[]) {
+    if (argc != 5) {
+        printf("Usage: ./randmst 0 numpoints numtrials dimension\n");
+        return 1;
+    }
+
+	int n = (int) strtol(argv[2], NULL, 10);
+	int d = (int) strtol(argv[4], NULL, 10);
+
     int edges = n * (n - 1) / 2;
     edge *tree[edges];
     generateGraph(n, d, tree);
