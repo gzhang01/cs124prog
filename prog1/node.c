@@ -14,6 +14,7 @@ node *find(node *n);
 void join(node *x, node *y);
 void destroySet(node *n);
 void link(node *x, node *y);
+void printSet(node *n);
 
 // Creates a node in the forest
 node *makeSet(int x) {
@@ -51,4 +52,9 @@ void link(node *x, node *y) {
 // Frees node n
 void destroySet(node *n) {
 	free(n);
+}
+
+// Prints node for debugging
+void printSet(node *n) {
+	printf("Node value %i with parent value %i and rank %i\n", n->value, n->parent->value, n->rank);
 }

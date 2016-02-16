@@ -22,3 +22,6 @@ void join(node *x, node *y);
 
 // Frees the memory that n points to
 void destroySet(node *n);
+
+// Prints node for debugging
+void printSet(node *n);
