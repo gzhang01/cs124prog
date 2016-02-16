@@ -9,13 +9,14 @@
 #include <stdlib.h>
 #include "node.h"
 
-node *makeset(int x);
+node *makeSet(int x);
 node *find(node *n);
 void join(node *x, node *y);
+void destroySet(node *n);
 void link(node *x, node *y);
 
 // Creates a node in the forest
-node *makeset(int x) {
+node *makeSet(int x) {
     node *n = malloc(sizeof(node));
     n->value = x;
     n->parent = n;
@@ -45,4 +46,9 @@ void link(node *x, node *y) {
 		y->rank++;
 	}
 	x->parent = y;
+}
+
+// Frees node n
+void destroySet(node *n) {
+	free(n);
 }
