@@ -57,13 +57,15 @@ void destroyGraph(int n, edge *graph[n * (n - 1) / 2]) {
 //          graph - array of (n C 2) edges
 void printGraph(int n, edge *graph[n * (n - 1) / 2]) {
     int edges = n * (n - 1) / 2;
-    int last = graph[0]->p1;
+    int count = 0, row = 1;
     for (int i = 0; i < edges; i++) {
-        if (graph[i]->p1 != last) {
+        if (count == row) {
             printf("\n");
-            last = graph[i]->p1;
+            count = 0;
+            row++;
         }
         printf("%.4f ", graph[i]->length);
+        count++;
     }
     printf("\n");
 }
