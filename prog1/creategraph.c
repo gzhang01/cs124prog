@@ -7,7 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+#include <sys/time.h>
 #include <math.h>
 #include "creategraph.h"
 
@@ -28,9 +28,10 @@ float square(float n);
 //			graph - pointer to edge array containing all edges in graph
 // Output: no return value; generated graph stored in graph
 void generateGraph(int n, int d, edge *graph[n * (n - 1) / 2]) {
-	// initialize RNG and get rid of first random number
-	srand((unsigned) time(NULL));
-    rand();
+	// initialize RNG with microsecond
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+	srand((unsigned) tv.tv_usec);
 
 	// Generate graph
 	if (d == 0) {
