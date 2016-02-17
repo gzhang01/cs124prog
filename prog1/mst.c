@@ -14,6 +14,7 @@ void generateMST(int n, int d, edge *graph[n * (n - 1) / 2], edge *mst[n - 1]);
 void mergeSort(edge *tree[], int l, int r);
 void merge(edge *tree[], int l, int m, int r);
 void printMST(int n, edge *mst[n - 1]);
+float getMaxWeight(int n, edge *mst[n - 1]);
 
 // Generating a minimum spanning tree
 // Inputs:	n - number of vertices
@@ -28,6 +29,7 @@ void generateMST(int n, int d, edge *graph[n * (n - 1) / 2], edge *mst[n - 1]) {
 
     // Sorts edges by weight
     mergeSort(graph, 0, edges - 1);
+    // printf("After sorting edges by weight:\n");
     // printGraph(n, graph);
 
     // Initializes sets based on vertices
@@ -125,6 +127,16 @@ void printMST(int n, edge *mst[n - 1]) {
     }
 }
 
+// Prints out maximum edge weight in MST for finding k(n)
+float getMaxWeight(int n, edge *mst[n - 1]) {
+    float maxWeight = 0;
+    for (int i = 0; i < n; i++) {
+        if (mst[i]->length > maxWeight)
+            maxWeight = mst[i]->length;
+    }
+    return maxWeight;
+}
+
 int main(int argc, char *argv[]) {
     if (argc != 5) {
         printf("Usage: ./randmst 0 numpoints numtrials dimension\n");
@@ -132,40 +144,72 @@ int main(int argc, char *argv[]) {
     }
 
     // Obtain info from command line
-    // int flag = (int) strtol(argv[1], NULL, 10);
+    int flag = (int) strtol(argv[1], NULL, 10);
 	int n = (int) strtol(argv[2], NULL, 10);
 	int trials = (int) strtol(argv[3], NULL, 10);
     int d = (int) strtol(argv[4], NULL, 10);
     
     int edges = n * (n - 1) / 2;
     float total_weight = 0;
+    float total_maxWeight = 0;
 
-    for (int trial = 0; trial < trials; trial++) {
+    // Variable to store how many numpoints to start with
+    int start = n;
+    // If flag == 1. calculate average weight of MST from to n
+    // This is used for estimating k(n)
+    if (flag == 1) {
+        start = 2;
+    }
+
+    // Store Average Max Weight in Output File
+    FILE *fp;
+    fp = fopen("maxWeight.txt", "w");
+    fputs("Average Max Weight of ", fp);
+    fclose(fp);
+    fp = fopen("maxWeight.txt", "a");
+    fprintf(fp, "%i trials \n\n", trials);
+    // column names
+    fprintf(fp, "numpoints   avgmaxweight \n");
+
+    for (int numpoints = start; numpoints <= n; numpoints++) {
+        for (int trial = 0; trial < trials; trial++) {
         // Space for complete graph and MST
         edge **graph = malloc(edges * sizeof(edge*));
-    	edge **mst = malloc((n - 1) * sizeof(edge*));
+        edge **mst = malloc((numpoints - 1) * sizeof(edge*));
 
         // Create graph and MST
-        generateGraph(n, d, graph);
-    	generateMST(n, d, graph, mst);
+        generateGraph(numpoints, d, graph);
+        generateMST(numpoints, d, graph, mst);
 
-        // printMST(n - 1, mst);
+        // printMST(numpoints - 1, mst);
 
         // Find weight of tree
         float weight = 0;
-        for (int i = 0; i < n - 1; i++) {
+        for (int i = 0; i < numpoints - 1; i++) {
             weight += mst[i]->length;
         }
         total_weight += weight;
 
+        // Find maxWeight of tree
+        float maxWeight = getMaxWeight(numpoints - 1, mst);
+        total_maxWeight += maxWeight;
+
+
         // Destroys graph
-        destroyGraph(n, graph);
+        destroyGraph(numpoints, graph);
         free(graph);
         free(mst);
+
+        // printf("Weight of Trial %i: %4f\n", trial+1, weight);
+        }
+
+        // Print Average Max Weight of MSTs to Output File
+        fprintf(fp, "  %3i         %4f \n", numpoints, total_maxWeight / trials);
+
+        // Prints out desired info
+        // printf("%f %i %i %i\n", total_weight / trials, numpoints, trials, d);
     }
 
-
-    // Prints out desired info
-    printf("%f %i %i %i\n", total_weight / trials, n, trials, d);
+    fclose(fp);
 
 }

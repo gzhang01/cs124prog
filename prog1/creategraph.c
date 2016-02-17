@@ -56,6 +56,17 @@ void destroyGraph(int n, edge *graph[n * (n - 1) / 2]) {
 // NOTE: should not be used for large values of n!
 // Input:   n - number of vertices
 //          graph - array of (n C 2) edges
+// Example: let n = 3
+// Output:
+//     0.5
+//     0.1 0.3
+//     0.2 0.4 0.6
+// 0.5 = weight(0,1)
+// 0.1 = weight(0,2)
+// 0.3 = weight(1,2)
+// 0.2 = weight(0,3)
+// 0.4 = weight(1,3)
+// 0.6 = weight(2,3)
 void printGraph(int n, edge *graph[n * (n - 1) / 2]) {
     int edges = n * (n - 1) / 2;
     int count = 0, row = 1;
