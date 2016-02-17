@@ -134,27 +134,38 @@ int main(int argc, char *argv[]) {
     // Obtain info from command line
     // int flag = (int) strtol(argv[1], NULL, 10);
 	int n = (int) strtol(argv[2], NULL, 10);
-	// int trials = (int) strtol(argv[3], NULL, 10);
+	int trials = (int) strtol(argv[3], NULL, 10);
     int d = (int) strtol(argv[4], NULL, 10);
-
-    // Space for complete graph and MST
+    
     int edges = n * (n - 1) / 2;
-    edge **graph = malloc(edges * sizeof(edge*));
-	edge **mst = malloc((n - 1) * sizeof(edge*));
+    float total_weight = 0;
 
-    // Create graph and MST
-    generateGraph(n, d, graph);
-	generateMST(n, d, graph, mst);
+    for (int trial = 0; trial < trials; trial++) {
+        // Space for complete graph and MST
+        edge **graph = malloc(edges * sizeof(edge*));
+    	edge **mst = malloc((n - 1) * sizeof(edge*));
+
+        // Create graph and MST
+        generateGraph(n, d, graph);
+    	generateMST(n, d, graph, mst);
+
+        // printMST(n - 1, mst);
+
+        // Find weight of tree
+        float weight = 0;
+        for (int i = 0; i < n - 1; i++) {
+            weight += mst[i]->length;
+        }
+        total_weight += weight;
+
+        // Destroys graph
+        destroyGraph(n, graph);
+        free(graph);
+        free(mst);
+    }
 
 
-    // printMST(n - 1, mst);
-
-
-
-    // Destroys graph
-    destroyGraph(n, graph);
-    free(graph);
-    free(mst);
-
+    // Prints out desired info
+    printf("%f %i %i %i\n", total_weight / trials, n, trials, d);
 
 }
