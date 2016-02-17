@@ -139,8 +139,8 @@ int main(int argc, char *argv[]) {
 
     // Space for complete graph and MST
     int edges = n * (n - 1) / 2;
-    edge *graph[edges];
-	edge *mst[n - 1];
+    edge **graph = malloc(edges * sizeof(edge*));
+	edge **mst = malloc((n - 1) * sizeof(edge*));
 
     // Create graph and MST
     generateGraph(n, d, graph);
@@ -153,6 +153,8 @@ int main(int argc, char *argv[]) {
 
     // Destroys graph
     destroyGraph(n, graph);
+    free(graph);
+    free(mst);
 
 
 }
