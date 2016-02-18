@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import sys
 
 # Import CSV
-file = "data/knt100avg.csv"
+file = "data/knt100avg_new.csv"
 csv = np.genfromtxt(file, delimiter=",")
 
 s = ""

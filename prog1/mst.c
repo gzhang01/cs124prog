@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <time.h>
+#include <math.h>
 #include "creategraph.h"
 #include "node.h"
 
@@ -158,7 +159,7 @@ void calculateAvgWeight(int flag, int n, int trials, int d, float* totalWeight) 
         time_t mstDone = time(NULL);
         if (flag == 4) { printf("Time to generate MST: %li\n", mstDone - graphDone); }
 
-        if (flag == 0 || flag == 4) {
+        if (flag == 0 || flag == 4 || flag == 5) {
             // Find weight of tree
             float weight = 0;
             for (int i = 0; i < n - 1; i++) {
@@ -214,7 +215,7 @@ int main(int argc, char *argv[]) {
 
     float total_weight = 0;
 
-    // This is used to Calculate Avergate Weight of MST with n numpoints
+    // This is used to Calculate Average Weight of MST with n numpoints
     // flag 4: include time information
     if (flag == 0 || flag == 4) {
         calculateAvgWeight(flag, n, trials, d, &total_weight);
@@ -231,13 +232,11 @@ int main(int argc, char *argv[]) {
         int multiple = (int) strtol(argv[6], NULL, 10);
 
         // File to store data in
-        char *file = (flag == 1) ? "data/knt100avg.csv" : "data/knt100max.csv";
+        char *file = (flag == 1) ? "data/knt100avg_new.csv" : "data/knt100max_new.csv";
 
         // Store Average Max Weight in Output File
         FILE *fp;
-        // fp = fopen(file, "a");
-        // fprintf(fp, "numpoints,d0,d2,d3,d4\n");
-        // fclose(fp);
+        fp = fopen(file, "a");
 
         for (int numpoints = start; numpoints <= n; numpoints += multiple) {
             printf("%i\n", numpoints);
@@ -249,14 +248,42 @@ int main(int argc, char *argv[]) {
                 calculateAvgWeight(flag, numpoints, trials, dim, &maxWeight[dim]);
             }
             // Print Average Max Weight of MSTs to Output File
-            fp = fopen(file, "a");
             if (flag == 1) {
                 fprintf(fp, "%3i,%.4f,%.4f,%.4f,%.4f\n", numpoints, maxWeight[0] / trials, maxWeight[2] / trials, maxWeight[3] / trials, maxWeight[4] / trials);
             } else if (flag == 2) {
                 fprintf(fp, "%3i,%.4f,%.4f,%.4f,%.4f\n", numpoints, maxWeight[0], maxWeight[2], maxWeight[3], maxWeight[4]);
-            }
-            fclose(fp);        
+            }      
         }
+        fclose(fp);  
+    }
+
+    // This is used for running algorithm for 2^n numpoints from n=4 to 16 
+    else if (flag == 5) {
+        // File to store data in
+        char *file = "data/output.csv";
+        FILE *fp;
+        fp = fopen(file, "w");
+        fputs("numpoints,dim,trials,avgweight\n", fp);
+        fclose(fp);
+        fp = fopen(file, "a");
+
+        for (int dim = 0; dim <= 4; dim++) {
+            if (dim == 1) {
+                continue;
+            }
+            printf("Dimension %i\n", dim)
+            for (int i = 4; i <= 16; i++) {
+                printf("Numpoints %i\n", power(2,i));
+                calculateAvgWeight(flag, power(2,i), trials, dim, &total_weight);
+                
+                // Prints to Output File
+                fprintf(fp, "%i,%i,%i,%f\n", n, dim, trials, total_weight / trials);
+            }
+            
+        }
+
+        fclose(fp); 
+
     }
 
     time_t end = time(NULL);

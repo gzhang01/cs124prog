@@ -102,9 +102,9 @@ int generate0d(int n, float th, int *cap, edge ***graph) {
         for (int j = 0; j < i; j++) {
             // If value is greater than threshold, ignore it
             float val = randFloat();
-            if (val > th) {
+            /* if (val > th) {
                 continue;
-            }
+            } */
 
             // Creating edge
             edge *e = malloc(sizeof(edge));
@@ -143,17 +143,17 @@ int generate234d(int n, int d, float th, int *cap, edge ***graph) {
     for (int i = 1; i < n; i++) {
         for (int j = 0; j < i; j++) {
             // If individual axes difference greater than threshold, ignore
-            for (int dim = 0; dim < d; dim++) {
+            /* for (int dim = 0; dim < d; dim++) {
                 if (vertices[i][dim] - vertices[j][dim] > th) {
                     continue;
                 }
-            }
+            } */
 
             // If distance between points greather than threshold, ignore
             float dist = distance(d, vertices[i], vertices[j]);
-            if (dist > th) {
+            /* if (dist > th) {
                 continue;
-            }
+            } */
 
             // Create edge
             edge *e = malloc(sizeof(edge));
