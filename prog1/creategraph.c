@@ -57,6 +57,7 @@ void destroyGraph(int edges, edge *graph[]) {
 // Pretty prints the graph to stdout for testing
 // Prints in matrix form (bottom triangular)
 // NOTE: should not be used for large values of n!
+// NOTE: will not work if graph gets sorted by edge length!
 // Input:   edges - number of edges
 //          graph - array of (n C 2) edges
 // Example: let n = 3
@@ -71,16 +72,27 @@ void destroyGraph(int edges, edge *graph[]) {
 // 0.4 = weight(1,3)
 // 0.6 = weight(2,3)
 void printGraph(int edges, edge *graph[]) {
-    int edges = n * (n - 1) / 2;
-    int count = 0, row = 1;
+    int last_row = 1, last_col = 0;
     for (int i = 0; i < edges; i++) {
-        if (count == row) {
+        if (graph[i]->p1 != last_row) {
+            while (last_col < last_row) {
+                printf("------ ");
+                last_col++;
+            }
             printf("\n");
-            count = 0;
-            row++;
+            last_row = graph[i]->p1;
+            last_col = 0;
+        }
+        while (graph[i]->p2 - last_col > 0) {
+            printf("------ ");
+            last_col++;
         }
         printf("%.4f ", graph[i]->length);
-        count++;
+        last_col++;
+    }
+    while (last_col < last_row) {
+        printf("------ ");
+        last_col++;
     }
     printf("\n");
 }
