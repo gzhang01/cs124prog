@@ -21,18 +21,15 @@ float distance(int d, float p1[d], float p2[d]);
 float square(float n);
 float threshold(int n, int d);
 
+int randnums = 0;
+
 // Generates a graph with n vertices in adjacency matrix form
 // Input: 	n - number of vertices
 // 			d - dimension of vertex. if 0, then random edge lengths
 //			graph - pointer to edge array containing all edges in graph
 // Output: returns number of edges created; generated graph stored in graph
 int generateGraph(int n, int d, int *cap, edge ***graph) {
-	// initialize RNG with microsecond
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-	srand((unsigned) tv.tv_usec);
-
-    // Obtain threshold
+	// Obtain threshold
     float th = threshold(n, d);
 
 	// Generate graph
@@ -178,6 +175,13 @@ int generate234d(int n, int d, float th, int *cap, edge ***graph) {
 
 // Generates a random float from 0 to 1
 float randFloat() {
+    if (randnums == 0) {
+        // initialize RNG with microsecond
+        struct timeval tv;
+        gettimeofday(&tv, NULL);
+        srand((unsigned) tv.tv_usec);
+    }
+    randnums = (randnums + 1) % 25;
 	return (float) rand() / (float) RAND_MAX;
 }
 
@@ -201,7 +205,7 @@ float square(float n) {
 // Values determined by experimental data
 float threshold(int n, int d) {
     if (d == 0) {
-        return 3.0 / (0.13374127083715834 * n + 6.1684804907091539) + 0.02;
+        return 3.0 / (0.13374127083715834 * n + 6.1684804907091539) + 0.001;
     } else if (d == 2) {
         return 2.0 / (0.017243763166416404 * n + 4.0175175984670837) + 0.05;
     } else if (d == 3) {

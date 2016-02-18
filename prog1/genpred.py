@@ -35,10 +35,10 @@ for i in xrange(len(maxData)):
 # print fns[0](maxData[0][0]) ** -1
 
 fns = [
-	lambda x: 3.0 * lin_fns[0](x) ** -1 + 0.00001,
-	lambda x: 2.0 * lin_fns[1](x) ** -1 + 0.05,
-	lambda x: 1.5 * lin_fns[2](x) ** -1 + 0.1,
-	lambda x: 1.2 * lin_fns[3](x) ** -1 + 0.15,
+	lambda x: 3.0 * lin_fns[0](x) ** -1,
+	lambda x: 2.0 * lin_fns[1](x) ** -1,
+	lambda x: 1.5 * lin_fns[2](x) ** -1,
+	lambda x: 1.2 * lin_fns[3](x) ** -1,
 ]
 
 with open("data/knt100maxpred.csv", "w") as f:
