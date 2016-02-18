@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <sys/time.h>
 #include <math.h>
+#include <assert.h>
 #include "creategraph.h"
 
 int generateGraph(int n, int d, int *cap, edge ***graph);
@@ -31,6 +32,8 @@ int randnums = 0;
 int generateGraph(int n, int d, int *cap, edge ***graph) {
 	// Obtain threshold
     float th = threshold(n, d);
+
+    assert (th != -1);
 
 	// Generate graph
 	if (d == 0) {
@@ -205,9 +208,9 @@ float square(float n) {
 // Values determined by experimental data
 float threshold(int n, int d) {
     if (d == 0) {
-        return 3.0 / (0.13374127083715834 * n + 6.1684804907091539) + 0.001;
+        return 3.0 / (0.13374127083715834 * n + 6.1684804907091539) + 0.003;
     } else if (d == 2) {
-        return 2.0 / (0.017243763166416404 * n + 4.0175175984670837) + 0.05;
+        return 2.0 / (0.017243763166416404 * n + 4.0175175984670837) + 0.03;
     } else if (d == 3) {
         return 1.5 / (0.0054664079219238727 * n + 2.6732089366215859) + 0.1;
     } else if (d == 4) {

@@ -237,7 +237,6 @@ int main(int argc, char *argv[]) {
 
         // Store Average Max Weight in Output File
         FILE *fp;
-        fp = fopen(file, "a");
 
         for (int numpoints = start; numpoints <= n; numpoints += multiple) {
             printf("%i\n", numpoints);
@@ -248,14 +247,16 @@ int main(int argc, char *argv[]) {
                 }
                 calculateAvgWeight(flag, numpoints, trials, dim, &maxWeight[dim]);
             }
+
+            fp = fopen(file, "a");
             // Print Average Max Weight of MSTs to Output File
             if (flag == 1) {
                 fprintf(fp, "%3i,%.4f,%.4f,%.4f,%.4f\n", numpoints, maxWeight[0] / trials, maxWeight[2] / trials, maxWeight[3] / trials, maxWeight[4] / trials);
             } else if (flag == 2) {
                 fprintf(fp, "%3i,%.4f,%.4f,%.4f,%.4f\n", numpoints, maxWeight[0], maxWeight[2], maxWeight[3], maxWeight[4]);
-            }      
-        }
-        fclose(fp);  
+            }  
+            fclose(fp);     
+        } 
     }
 
     // This is used for running algorithm for 2^n numpoints from n=4 to 16 
@@ -274,8 +275,8 @@ int main(int argc, char *argv[]) {
             }
             printf("Dimension %i\n", dim);
             for (int i = 4; i <= 16; i++) {
-                printf("Numpoints %f\n", pow(2,i));
-                calculateAvgWeight(flag, pow(2,i), trials, dim, &total_weight);
+                printf("Numpoints %i\n", (int) pow(2,i));
+                calculateAvgWeight(flag, (int) pow(2,i), trials, dim, &total_weight);
                 
                 // Prints to Output File
                 fprintf(fp, "%i,%i,%i,%f\n", n, dim, trials, total_weight / trials);

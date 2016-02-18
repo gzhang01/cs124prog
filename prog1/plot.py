@@ -9,7 +9,8 @@ csv = np.genfromtxt(file, delimiter=",")
 s = ""
 
 for d in xrange(5):
-	if d in [1,]:
+	# if d in [1, 0, 3, 4,]:
+	if d in [1]:
 		continue
 
 	d_csv = 1 if d == 0 else d
@@ -30,22 +31,23 @@ for d in xrange(5):
 	fit = []
 	multiplier = 0
 	if (d == 0): 
-		fit = [0.13374127083715834, 6.1684804907091539]
-		multiplier = 3
-		scalar = 0
+		fit = [0.104267597463697, 21.525881215748651]
+		multiplier = 5
+		scalar = 0.0015
 	if (d == 2): 
-		fit = [0.017243763166416404, 4.0175175984670837]
-		multiplier = 2
-		scalar = 0.05
+		fit = [0.0037447611977611374, 8.1979386713201681]
+		multiplier = 1
+		scalar = 0.0
 	if (d == 3): 
-		fit = [0.0054664079219238727, 2.6732089366215859]
+		fit = [0.00107063995182667, 4.6687284733278531]
 		multiplier = 1.5
-		scalar = 0.10
+		scalar = 0.1
 	if (d == 4): 
-		fit = [0.0026841794200285845, 2.0023055625711859]
+		fit = [0.00050853942566385282, 3.1234380574979919]
 		multiplier = 1.2
 		scalar = 0.15
 	# multiplier = 1
+	# scalar = 0
 	fit_fn = np.poly1d(fit)
 	# fit_fn is now a function which takes in x and returns an estimate for y
 
@@ -53,10 +55,10 @@ for d in xrange(5):
 	xs.sort()
 	xs = np.asarray(xs)
 
-	# plt.plot(numpoints, fit_fn(numpoints))
-	# plt.scatter(numpoints, new_d0);
-	plt.plot(xs, multiplier * (fit_fn(xs) ** -1) + scalar)
-	plt.scatter(numpoints, d0)
+	plt.plot(numpoints, fit_fn(numpoints))
+	plt.scatter(numpoints, new_d0);
+	# plt.plot(xs, multiplier * (fit_fn(xs) ** -1) + scalar)
+	# plt.scatter(numpoints, d0)
 
 	plt.show()
 
