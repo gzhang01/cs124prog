@@ -20,7 +20,8 @@ for d in xrange(5):
 	# print numpoints
 	# print d0
 
-	new_d0 = d0 ** -1
+	d_tmp = d if (d != 0) else 1
+	new_d0 = d0 ** (-1 * (d_tmp))
 
 	# print numpoints
 	# print d0
@@ -31,19 +32,19 @@ for d in xrange(5):
 	fit = []
 	multiplier = 0
 	if (d == 0): 
-		fit = [0.104267597463697, 21.525881215748651]
+		fit = [0.10523204120493665, 21.197763419973427]
 		multiplier = 5
 		scalar = 0.0015
 	if (d == 2): 
-		fit = [0.0037447611977611374, 8.1979386713201681]
-		multiplier = 1
-		scalar = 0.0
+		fit = [0.16517538261952885, 22.97229280304088]
+		multiplier = 2
+		scalar = 0.03
 	if (d == 3): 
-		fit = [0.00107063995182667, 4.6687284733278531]
+		fit = [0.23458454621312719, 35.856196376448942]
 		multiplier = 1.5
 		scalar = 0.1
 	if (d == 4): 
-		fit = [0.00050853942566385282, 3.1234380574979919]
+		fit = [0.24600034088745676, 18.665592765194326]
 		multiplier = 1.2
 		scalar = 0.15
 	# multiplier = 1
@@ -55,10 +56,10 @@ for d in xrange(5):
 	xs.sort()
 	xs = np.asarray(xs)
 
-	plt.plot(numpoints, fit_fn(numpoints))
-	plt.scatter(numpoints, new_d0);
-	# plt.plot(xs, multiplier * (fit_fn(xs) ** -1) + scalar)
-	# plt.scatter(numpoints, d0)
+	# plt.plot(numpoints, fit_fn(numpoints))
+	# plt.scatter(numpoints, new_d0);
+	plt.plot(xs, multiplier * (fit_fn(xs) ** (-1.0 / d_tmp)) + scalar)
+	plt.scatter(numpoints, d0)
 
 	plt.show()
 
