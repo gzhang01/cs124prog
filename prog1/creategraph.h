@@ -16,7 +16,7 @@ typedef struct {
 // 			d - dimension of vertex. if 0, then random edge lengths
 //			graph - pointer to edge array containing all edges in graph
 // Output: returns number of edges created; generated graph stored in graph
-int generateGraph(int n, int d, edge* graph[n * (n - 1) / 2]);
+int generateGraph(int n, int d, int *cap, edge ***graph);
 
 // Frees all memory allocated in graph
 // Input:   edges - number of edges

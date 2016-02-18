@@ -13,11 +13,11 @@
 
 #define INDEX(i, j) (i - 1) * i / 2 + j
 
-int generateGraph(int n, int d, edge *graph[n * (n - 1) / 2]);
+int generateGraph(int n, int d, int *cap, edge ***graph);
 void destroyGraph(int edges, edge *graph[]);
 void printGraph(int n, edge *graph[n * (n - 1) / 2]);
-int generate0d(int n, float th, edge *graph[n * (n - 1) / 2]);
-int generate234d(int n, int d, float th, edge *graph[n * (n - 1) / 2]);
+int generate0d(int n, float th, int *cap, edge ***graph);
+int generate234d(int n, int d, float th, int *cap, edge ***graph);
 float randFloat();
 float distance(int d, float p1[d], float p2[d]);
 float square(float n);
@@ -28,7 +28,7 @@ float threshold(int n, int d);
 // 			d - dimension of vertex. if 0, then random edge lengths
 //			graph - pointer to edge array containing all edges in graph
 // Output: returns number of edges created; generated graph stored in graph
-int generateGraph(int n, int d, edge *graph[n * (n - 1) / 2]) {
+int generateGraph(int n, int d, int *cap, edge ***graph) {
 	// initialize RNG with microsecond
     struct timeval tv;
     gettimeofday(&tv, NULL);
@@ -39,9 +39,9 @@ int generateGraph(int n, int d, edge *graph[n * (n - 1) / 2]) {
 
 	// Generate graph
 	if (d == 0) {
-		return generate0d(n, th, graph);
+		return generate0d(n, th, cap, graph);
 	} else {
-		return generate234d(n, d, th, graph);
+		return generate234d(n, d, th, cap, graph);
 	}
 }
 
@@ -100,7 +100,7 @@ void printGraph(int edges, edge *graph[]) {
 // Helper function
 // Creates graph of n vertices, where weight of each edge is in [0, 1]
 // Stores result in graph; returns number of edges added
-int generate0d(int n, float th, edge *graph[n * (n - 1) / 2]) {
+int generate0d(int n, float th, int *cap, edge ***graph) {
     int numEdges = 0;
     // Find all edges
     for (int i = 1; i < n; i++) {
@@ -110,12 +110,20 @@ int generate0d(int n, float th, edge *graph[n * (n - 1) / 2]) {
             if (val > th) {
                 continue;
             }
+
+            // Creating edge
             edge *e = malloc(sizeof(edge));
             e->p1 = i;
             e->p2 = j;
             e->length = val;
-            graph[numEdges] = e;
+            (*graph)[numEdges] = e;
             numEdges++;
+
+            // Realloc for more space if cap reached
+            if (numEdges >= *cap) {
+                *graph = (edge**) realloc((void*) *graph, (*cap * 2) * sizeof(edge*));
+                *cap *= 2;
+            }
         }
     }
     return numEdges;
@@ -123,7 +131,7 @@ int generate0d(int n, float th, edge *graph[n * (n - 1) / 2]) {
 
 // Helper function
 // Generates graph for n vertices initialized in d dimensions
-int generate234d(int n, int d, float th, edge *graph[n * (n - 1) / 2]) {
+int generate234d(int n, int d, float th, int *cap, edge ***graph) {
 	// Keep track of vertices. Each row is single vertex with dimensionality d
 	float vertices[n][d];
 
@@ -152,12 +160,19 @@ int generate234d(int n, int d, float th, edge *graph[n * (n - 1) / 2]) {
                 continue;
             }
 
+            // Create edge
             edge *e = malloc(sizeof(edge));
             e->p1 = i;
             e->p2 = j;
             e->length = dist;
-            graph[numEdges] = e;
+            (*graph)[numEdges] = e;
             numEdges++;
+
+            // If cap reached, realloc
+            if (numEdges >= *cap) {
+                *graph = (edge**) realloc((void*) *graph, (*cap * 2) * sizeof(edge*));
+                *cap *= 2;
+            }
         }
     }
     return numEdges;
