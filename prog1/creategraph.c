@@ -188,13 +188,13 @@ float square(float n) {
 // Values determined by experimental data
 float threshold(int n, int d) {
     if (d == 0) {
-        return 3.5 / (0.16799676 * n + 2.93108083);
+        return 3.0 / (0.13374127083715834 * n + 6.1684804907091539) + 0.02;
     } else if (d == 2) {
-        return 2.5 / (0.03520531 * n + 2.6599906);
+        return 2.0 / (0.017243763166416404 * n + 4.0175175984670837) + 0.05;
     } else if (d == 3) {
-        return 2.0 / (0.01392143 * n + 2.03798067);
+        return 1.5 / (0.0054664079219238727 * n + 2.6732089366215859) + 0.1;
     } else if (d == 4) {
-        return 1.8 / (0.00761201 * n + 1.65815953);
+        return 1.2 / (0.0026841794200285845 * n + 2.0023055625711859) + 0.15;
     }
 
     // If given d is not valid, return -1 as error

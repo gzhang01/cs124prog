@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 #include "creategraph.h"
 #include "node.h"
 
@@ -50,6 +51,8 @@ void generateMST(int n, int d, int edges, edge *graph[n * (n - 1) / 2], edge *ms
             }
         }
     }
+
+    assert(foundEdges == n - 1);
 
     // Destroy all sets created
     for (int i = 0; i < n; i++) {
@@ -175,16 +178,22 @@ void calculateAvgWeight(int flag, int n, int trials, int d, float* totalWeight) 
 }
 
 int main(int argc, char *argv[]) {
-    if (argc != 5) {
-        printf("Usage: ./randmst 0 numpoints numtrials dimension\n");
-        return 1;
-    }
-
     // Obtain info from command line
     int flag = (int) strtol(argv[1], NULL, 10);
 	int n = (int) strtol(argv[2], NULL, 10);
 	int trials = (int) strtol(argv[3], NULL, 10);
     int d = (int) strtol(argv[4], NULL, 10);
+
+    if (argc != 5 && flag == 0) {
+        printf("Usage: ./randmst 0 numpoints numtrials dimension\n");
+        return 1;
+    }
+
+    if ((flag == 1 || flag == 2) && argc != 7) {
+        printf("Usage: ./randmst (1/2) numpoints numtrials dimension start mult\n");
+        return 1;
+    }
+
     float total_weight = 0;
 
     // This is used to Calculate Avergate Weight of MST with n numpoints
@@ -198,18 +207,20 @@ int main(int argc, char *argv[]) {
     // This is used for estimating k(n)
     // Calculate average max weight of edge of MST from 2 to n for all dimensions
     else if (flag == 1) {
-        int start = 10;
+        int start = (int) strtol(argv[5], NULL, 10);
+        int multiple = (int) strtol(argv[6], NULL, 10);
 
         // File to store data in
         char *file = "data/knt100avg.csv";
 
         // Store Average Max Weight in Output File
         FILE *fp;
-        fp = fopen(file, "w");
-        fprintf(fp, "numpoints,d0,d2,d3,d4\n");
-        fclose(fp);
+        // fp = fopen(file, "a");
+        // fprintf(fp, "numpoints,d0,d2,d3,d4\n");
+        // fclose(fp);
 
-        for (int numpoints = start; numpoints <= n; numpoints++) {
+        for (int numpoints = start; numpoints <= n; numpoints += multiple) {
+            printf("%i\n", numpoints);
             float maxWeight[5] = {0};
             for (int dim = 0; dim <= 4; dim++) {
                 if (dim == 1) {
@@ -226,18 +237,20 @@ int main(int argc, char *argv[]) {
 
     // Produce csv with max weights
     else if (flag == 2) {
-        int start = 10;
+        int start = (int) strtol(argv[5], NULL, 10);
+        int multiple = (int) strtol(argv[6], NULL, 10);
 
         // File to store data in
         char *file = "data/knt100max.csv";
 
         // Store Average Max Weight in Output File
         FILE *fp;
-        fp = fopen(file, "w");
-        fprintf(fp, "numpoints,d0,d2,d3,d4\n");
-        fclose(fp);
+        // fp = fopen(file, "a");
+        // fprintf(fp, "numpoints,d0,d2,d3,d4\n");
+        // fclose(fp);
 
-        for (int numpoints = start; numpoints <= n; numpoints++) {
+        for (int numpoints = start; numpoints <= n; numpoints += multiple) {
+            printf("%i\n", numpoints);
             float maxWeight[5] = {0};
             for (int dim = 0; dim <= 4; dim++) {
                 if (dim == 1) {
