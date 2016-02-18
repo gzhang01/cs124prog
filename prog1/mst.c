@@ -142,6 +142,7 @@ float getMaxWeight(int n, edge *mst[n]) {
 // Calculate Average Weight of MST with n points
 void calculateAvgWeight(int flag, int n, int trials, int d, float* totalWeight) {
     for (int trial = 0; trial < trials; trial++) {
+        printf("Trial %i\n", trial);
         if (flag == 4) { printf("Trial %i\n", trial); }
         // Space for complete graph and MST
         int cap = n;
@@ -271,10 +272,10 @@ int main(int argc, char *argv[]) {
             if (dim == 1) {
                 continue;
             }
-            printf("Dimension %i\n", dim)
+            printf("Dimension %i\n", dim);
             for (int i = 4; i <= 16; i++) {
-                printf("Numpoints %i\n", power(2,i));
-                calculateAvgWeight(flag, power(2,i), trials, dim, &total_weight);
+                printf("Numpoints %f\n", pow(2,i));
+                calculateAvgWeight(flag, pow(2,i), trials, dim, &total_weight);
                 
                 // Prints to Output File
                 fprintf(fp, "%i,%i,%i,%f\n", n, dim, trials, total_weight / trials);
