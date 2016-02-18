@@ -3,10 +3,10 @@ ratios = [[], [], [], [], []]
 avgData = []
 maxData = []
 
-with open("knt100avg.csv") as f:
+with open("data/knt100avg.csv") as f:
 	avgData = f.readlines()
 
-with open("knt100max.csv") as f:
+with open("data/knt100max.csv") as f:
 	maxData = f.readlines()
 
 avgData.pop(0)

@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import sys
 
 # Import CSV
-file = "knt100max.csv"
+file = "data/knt100max.csv"
 csv = np.genfromtxt(file, delimiter=",")
 
 s = ""

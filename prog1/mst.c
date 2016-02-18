@@ -20,7 +20,8 @@ void calculateAvgWeight(int flag, int n, int trials, int d, float* totalWeight);
 // Generating a minimum spanning tree
 // Inputs:	n - number of vertices
 // 			d - dimension of vertex. if 0, then random edge lengths
-//          tree - complete graph of given number of vertices
+//          edges - number of edges in graph
+//          graph - complete graph of given number of vertices
 //			mst - pointer to array of edges making up MST
 // Output: no return value; generated tree stored in mst
 // NOTE: tree is not preserved
@@ -143,9 +144,9 @@ void calculateAvgWeight(int flag, int n, int trials, int d, float* totalWeight) 
 
         // Create graph and MST
         int edges = generateGraph(n, d, graph);
-        printGraph(edges, graph);
+        // printGraph(edges, graph);
         generateMST(n, d, edges, graph, mst);
-        printMST(n - 1, mst);
+        // printMST(n - 1, mst);
 
         if (flag == 0) {
             // Find weight of tree
@@ -200,7 +201,7 @@ int main(int argc, char *argv[]) {
         int start = 10;
 
         // File to store data in
-        char *file = "knt100avg.csv";
+        char *file = "data/knt100avg.csv";
 
         // Store Average Max Weight in Output File
         FILE *fp;
@@ -228,7 +229,7 @@ int main(int argc, char *argv[]) {
         int start = 10;
 
         // File to store data in
-        char *file = "knt100max.csv";
+        char *file = "data/knt100max.csv";
 
         // Store Average Max Weight in Output File
         FILE *fp;
