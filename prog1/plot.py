@@ -32,7 +32,7 @@ for d in xrange(5):
 	if (d == 0): 
 		fit = [0.13374127083715834, 6.1684804907091539]
 		multiplier = 3
-		scalar = 0.02
+		scalar = 0
 	if (d == 2): 
 		fit = [0.017243763166416404, 4.0175175984670837]
 		multiplier = 2

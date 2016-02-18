@@ -202,7 +202,7 @@ int main(int argc, char *argv[]) {
 	int trials = (int) strtol(argv[3], NULL, 10);
     int d = (int) strtol(argv[4], NULL, 10);
 
-    if (argc != 5 && flag == 0) {
+    if (argc != 5 && (flag == 0 || flag == 4)) {
         printf("Usage: ./randmst 0 numpoints numtrials dimension\n");
         return 1;
     }

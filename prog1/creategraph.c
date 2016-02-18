@@ -11,8 +11,6 @@
 #include <math.h>
 #include "creategraph.h"
 
-#define INDEX(i, j) (i - 1) * i / 2 + j
-
 int generateGraph(int n, int d, int *cap, edge ***graph);
 void destroyGraph(int edges, edge *graph[]);
 void printGraph(int n, edge *graph[n * (n - 1) / 2]);
