@@ -153,7 +153,7 @@ void calculateAvgWeight(int flag, int n, int trials, int d, float* totalWeight) 
         // Create graph
         int edges = generateGraph(n, d, &cap, &graph);
         time_t graphDone = time(NULL);
-        if (flag == 4) { printf("Time to generate graph: %li\n", graphDone - start); }
+        if (flag == 4) { printf("Time to generate graph: %li\n", graphDone - start); printf("Number of edges: %i\n", edges);}
 
         // Create MST
         generateMST(n, d, edges, graph, mst);
