@@ -21,6 +21,3 @@ plt.plot(d3[:,0], d3[:,3], '.')
 plt.figure(4)
 plt.plot(d4[:,0], d4[:,3], '.')
 plt.show()
-
-
-new_d2 = d2
