@@ -8,6 +8,22 @@ csv = np.genfromtxt(file, delimiter=",")
 
 s = ""
 
+def threshold(ns, d):
+    output = []
+    for n in ns:
+        # Threshold unreliable for small n
+        scalar = 0
+        if (n < 500): scalar = 0.3 if (d == 0) else 0.6 if (d == 2) else 0.5 if (d == 3) else 0.5
+        elif (n < 1000 and d == 0): scalar = 0.1
+        else: scalar = 0.01 if (d == 0) else 0.1 if (d == 2) else 0.035 if (d == 3) else 0.04
+        
+        if (d == 0): output.append(2 / ((0.10523204120493665 * n + 1.197763419973427) ** (1)) + scalar)
+        elif (d == 2): output.append(1.2 / ((0.16517538261952885 * n + 2.97229280304088) ** (1.0 / 2)) + scalar)
+        elif (d == 3): output.append(1.2 / ((0.23458454621312719 * n + 0.856196376448942) ** (1.0 / 3)) + scalar)
+        elif (d == 4): output.append(1.2 / ((0.24600034088745676 * n + 0.665592765194326) ** (1.0 / 4)) + scalar)
+        else: output.append(-1)
+    return output
+
 for d in xrange(5):
 	if d in [1, 2, 3, 0,]:
 	# if d in [1]:
@@ -90,19 +106,19 @@ for d in xrange(5):
 	# plt.scatter(numpoints, new_d0);
 	# plt.show()
 
-	plt.plot(xs, (multiplier * (fit_fn(xs) ** (-1.0 / d_tmp)) + scalar))
+	plt.plot(xs, threshold(xs, d))
 	plt.scatter(numpoints, d0)
 	plt.show()
 
-	plt.plot(first_s, (multiplier * (fit_fn(first_s) ** (-1.0 / d_tmp)) + scalar))
+	plt.plot(first_s, threshold(first_s, d))
 	plt.scatter(first[0], first[1])
 	plt.show()
 
-	plt.plot(second_s, (multiplier * (fit_fn(second_s) ** (-1.0 / d_tmp)) + scalar))
+	plt.plot(second_s, threshold(second_s, d))
 	plt.scatter(second[0], second[1])
 	plt.show()
 
-	plt.plot(third_s, (multiplier * (fit_fn(third_s) ** (-1.0 / d_tmp)) + scalar))
+	plt.plot(third_s, threshold(third_s, d))
 	plt.scatter(third[0], third[1])
 	plt.show()
 

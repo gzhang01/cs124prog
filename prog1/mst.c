@@ -13,7 +13,7 @@
 #include "creategraph.h"
 #include "node.h"
 
-void generateMST(int n, int d, int edges, edge *graph[n * (n - 1) / 2], edge *mst[n - 1]);
+int generateMST(int n, int d, int edges, edge *graph[n * (n - 1) / 2], edge *mst[n - 1]);
 void mergeSort(edge *tree[], int l, int r);
 void merge(edge *tree[], int l, int m, int r);
 void printMST(int n, edge *mst[n - 1]);
@@ -26,9 +26,9 @@ void calculateAvgWeight(int flag, int n, int trials, int d, float* totalWeight);
 //          edges - number of edges in graph
 //          graph - complete graph of given number of vertices
 //			mst - pointer to array of edges making up MST
-// Output: no return value; generated tree stored in mst
-// NOTE: tree is not preserved
-void generateMST(int n, int d, int edges, edge *graph[n * (n - 1) / 2], edge *mst[n - 1]) {
+// Output: returns number of edges in mst; generated tree stored in mst
+// NOTE: graph is not preserved
+int generateMST(int n, int d, int edges, edge *graph[n * (n - 1) / 2], edge *mst[n - 1]) {
     // Sorts edges by weight
     mergeSort(graph, 0, edges - 1);
 
@@ -52,15 +52,13 @@ void generateMST(int n, int d, int edges, edge *graph[n * (n - 1) / 2], edge *ms
             }
         }
     }
-    if (foundEdges != n - 1) {
-        printf("n: %i, d: %i\n", n, d);
-    }
-    assert(foundEdges == n - 1);
 
     // Destroy all sets created
     for (int i = 0; i < n; i++) {
         destroySet(sets[i]);
     }
+
+    return foundEdges;
 }
 
 // Sorts section of array with index in range [l, r)
@@ -145,7 +143,7 @@ float getMaxWeight(int n, edge *mst[n]) {
 void calculateAvgWeight(int flag, int n, int trials, int d, float* totalWeight) {
     for (int trial = 0; trial < trials; trial++) {
         
-        if (flag == 4 || flag == 5) { printf("Trial %i\n", trial); }
+        if (flag == 4) { printf("Trial %i\n", trial); }
         // Space for complete graph and MST
         int cap = n;
         edge **graph = malloc(cap * sizeof(edge*));
@@ -158,27 +156,32 @@ void calculateAvgWeight(int flag, int n, int trials, int d, float* totalWeight) 
         if (flag == 4) { printf("Time to generate graph: %li\n", graphDone - start); printf("Number of edges: %i\n", edges);}
 
         // Create MST
-        generateMST(n, d, edges, graph, mst);
+        int mstEdges = generateMST(n, d, edges, graph, mst);
         time_t mstDone = time(NULL);
         if (flag == 4) { printf("Time to generate MST: %li\n", mstDone - graphDone); }
 
-        if (flag == 0 || flag == 4 || flag == 5) {
-            // Find weight of tree
-            float weight = 0;
-            for (int i = 0; i < n - 1; i++) {
-                weight += mst[i]->length;
+        if (mstEdges == n - 1) {
+            if (flag == 0 || flag == 4 || flag == 5) {
+                // Find weight of tree
+                float weight = 0;
+                for (int i = 0; i < n - 1; i++) {
+                    weight += mst[i]->length;
+                }
+                *totalWeight += weight;
+            } else if (flag == 1) {
+                // Find total weight of tree
+                float maxWeight = getMaxWeight(n - 1, mst);
+                *totalWeight += maxWeight;
+            } else if (flag == 2) {
+                // Find maxWeight of tree
+                float maxWeight = getMaxWeight(n - 1, mst);
+                if (maxWeight > *totalWeight) {
+                    *totalWeight = maxWeight;
+                }
             }
-            *totalWeight += weight;
-        } else if (flag == 1) {
-            // Find total weight of tree
-            float maxWeight = getMaxWeight(n - 1, mst);
-            *totalWeight += maxWeight;
-        } else if (flag == 2) {
-            // Find maxWeight of tree
-            float maxWeight = getMaxWeight(n - 1, mst);
-            if (maxWeight > *totalWeight) {
-                *totalWeight = maxWeight;
-            }
+        } else {
+            printf("Redoing\n");
+            trial--;
         }
 
         // Destroys graph
@@ -216,13 +219,11 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    float total_weight = 0;
-
     // This is used to Calculate Average Weight of MST with n numpoints
     // flag 4: include time information
     if (flag == 0 || flag == 4) {
+        float total_weight = 0;
         calculateAvgWeight(flag, n, trials, d, &total_weight);
-
         // Prints out desired info
         printf("%f %i %i %i\n", total_weight / trials, n, trials, d);
     }
@@ -269,7 +270,6 @@ int main(int argc, char *argv[]) {
         fp = fopen(file, "w");
         fputs("numpoints,dim,trials,avgweight\n", fp);
         fclose(fp);
-        fp = fopen(file, "a");
 
         for (int dim = 0; dim <= 4; dim++) {
             if (dim == 1) {
@@ -277,21 +277,23 @@ int main(int argc, char *argv[]) {
             }
             printf("Dimension %i\n", dim);
             for (int i = 4; i <= 16; i++) {
-                printf("Numpoints %i\n", (int) pow(2,i));
-                calculateAvgWeight(flag, (int) pow(2,i), trials, dim, &total_weight);
+                int n = (int) pow(2, i);
+                int trials[] = {0, 0, 0, 0, 10000, 10000, 5000, 1000, 300, 300, 100, 30, 10, 5, 5, 5, 5};
+
+                float total_weight = 0;
+                printf("Numpoints %i\n", n);
+                calculateAvgWeight(flag, n, trials[i], dim, &total_weight);
                 
                 // Prints to Output File
-                fprintf(fp, "%i,%i,%i,%f\n", n, dim, trials, total_weight / trials);
-            }
-            
+                fp = fopen(file, "a");
+                fprintf(fp, "%i,%i,%i,%f\n", n, dim, trials[i], total_weight / trials[i]);
+                fclose(fp); 
+            } 
         }
-
-        fclose(fp); 
-
     }
 
     time_t end = time(NULL);
-
+    
     if (flag == 4) {
         printf("total program runtime: %li\n", end - start);
     }
