@@ -19,7 +19,7 @@ for d in xrange(5):
 
 maxData = []
 
-with open("data/knt100max.csv") as f:
+with open("data/knt100max_new.csv") as f:
 	maxData = f.readlines()
 
 maxData.pop(0)
