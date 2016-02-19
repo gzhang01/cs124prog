@@ -52,7 +52,9 @@ void generateMST(int n, int d, int edges, edge *graph[n * (n - 1) / 2], edge *ms
             }
         }
     }
-
+    if (foundEdges != n - 1) {
+        printf("n: %i, d: %i\n", n, d);
+    }
     assert(foundEdges == n - 1);
 
     // Destroy all sets created

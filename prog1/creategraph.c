@@ -207,14 +207,23 @@ float square(float n) {
 // Calculates a threshold given n vertices and dimension d
 // Values determined by experimental data
 float threshold(int n, int d) {
+    // Threshold unreliable for small n
+    float scalar = 0;
+    if (n < 500) {
+        scalar = (d == 0) ? 0.3 : (d == 2) ? 0.6 : (d == 3) ? 0.5 : 0.5;
+    } else if (n < 1000 && d == 0) {
+        scalar = 0.1;
+    } else {
+        scalar = (d == 0) ? 0.01 : (d == 2) ? 0.1 : (d == 3) ? 0.035 : 0.04;
+    }
     if (d == 0) {
-        return 1.5 / pow((0.10523204120493665 * n + 1.197763419973427), 1) + 0.005;
+        return 2 / pow((0.10523204120493665 * n + 1.197763419973427), 1) + scalar;
     } else if (d == 2) {
-        return 1.2 / pow((0.16517538261952885 * n + 2.97229280304088), 1.0 / 2) + 0.01;
+        return 1.2 / pow((0.16517538261952885 * n + 2.97229280304088), 1.0 / 2) + scalar;
     } else if (d == 3) {
-        return 1.2 / pow((0.23458454621312719 * n + 0.856196376448942), 1.0 / 3) + 0.01;
+        return 1.2 / pow((0.23458454621312719 * n + 0.856196376448942), 1.0 / 3) + scalar;
     } else if (d == 4) {
-        return 1.2 / pow((0.24600034088745676 * n + 0.665592765194326), 1.0 / 4) + 0.01;
+        return 1.2 / pow((0.24600034088745676 * n + 0.665592765194326), 1.0 / 4) + scalar;
     }
 
     // If given d is not valid, return -1 as error

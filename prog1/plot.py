@@ -9,8 +9,8 @@ csv = np.genfromtxt(file, delimiter=",")
 s = ""
 
 for d in xrange(5):
-	# if d in [1, 3, 0, 2,]:
-	if d in [1]:
+	if d in [1, 2, 3, 0,]:
+	# if d in [1]:
 		continue
 
 	d_csv = 1 if d == 0 else d
@@ -35,31 +35,56 @@ for d in xrange(5):
 	if (d == 0): 
 		fit = [0.10523204120493665, 21.197763419973427]
 		fit[1] -= 20
-		multiplier = 1.5
+		multiplier = 2
 		scalar = 0.005
 	if (d == 2): 
 		fit = [0.16517538261952885, 22.97229280304088]
 		fit[1] -= 20
 		multiplier = 1.2
-		scalar = 0.01
+		scalar = 0.1
 	if (d == 3): 
 		fit = [0.23458454621312719, 35.856196376448942]
 		fit[1] -= 35
 		multiplier = 1.2
-		scalar = 0.01
+		scalar = 0.035
 	if (d == 4): 
 		fit = [0.24600034088745676, 18.665592765194326]
 		fit[1] -= 18
 		multiplier = 1.2
-		scalar = 0.01
+		scalar = 0.04
 	# multiplier = 1
-	scalar = 0
+	# scalar = 0
 	fit_fn = np.poly1d(fit)
 	# fit_fn is now a function which takes in x and returns an estimate for y
 
 	xs = list(numpoints)
 	xs.sort()
 	xs = np.asarray(xs)
+
+	first = [[], []]
+	second = [[], []]
+	third = [[], []]
+
+	for i in xrange(len(numpoints)):
+		if numpoints[i] < 500:
+			first[0].append(numpoints[i])
+			first[1].append(d0[i])
+		elif numpoints[i] > 1000:
+			third[0].append(numpoints[i])
+			third[1].append(d0[i])
+		else:
+			second[0].append(numpoints[i])
+			second[1].append(d0[i])
+
+	first_s = first[0]
+	first_s.sort()
+	first_s = np.asarray(first_s)
+	second_s = second[0]
+	second_s.sort()
+	second_s = np.asarray(second_s)
+	third_s = third[0]
+	third_s.sort()
+	third_s = np.asarray(third_s)
 
 	# plt.plot(numpoints, fit_fn(numpoints))
 	# plt.scatter(numpoints, new_d0);
@@ -69,12 +94,16 @@ for d in xrange(5):
 	plt.scatter(numpoints, d0)
 	plt.show()
 
-	plt.plot(xs[:20], (multiplier * (fit_fn(xs) ** (-1.0 / d_tmp)) + scalar)[:20])
-	plt.scatter(numpoints[:20], d0[:20])
+	plt.plot(first_s, (multiplier * (fit_fn(first_s) ** (-1.0 / d_tmp)) + scalar))
+	plt.scatter(first[0], first[1])
 	plt.show()
 
-	plt.plot(xs[-8:], (multiplier * (fit_fn(xs) ** (-1.0 / d_tmp)) + scalar)[-8:])
-	plt.scatter(numpoints[-8:], d0[-8:])
+	plt.plot(second_s, (multiplier * (fit_fn(second_s) ** (-1.0 / d_tmp)) + scalar))
+	plt.scatter(second[0], second[1])
+	plt.show()
+
+	plt.plot(third_s, (multiplier * (fit_fn(third_s) ** (-1.0 / d_tmp)) + scalar))
+	plt.scatter(third[0], third[1])
 	plt.show()
 
 	# if d == 0:
