@@ -9,24 +9,38 @@ csv = np.genfromtxt(file, delimiter=",")
 s = ""
 
 def threshold(ns, d):
-    output = []
-    for n in ns:
-        # Threshold unreliable for small n
-        scalar = 0
-        if (n < 500): scalar = 0.3 if (d == 0) else 0.6 if (d == 2) else 0.5 if (d == 3) else 0.5
-        elif (n < 1000 and d == 0): scalar = 0.1
-        else: scalar = 0.01 if (d == 0) else 0.1 if (d == 2) else 0.035 if (d == 3) else 0.04
+	output = []
+	for n in ns:
+		scalar = 0
+		if (n < 500): scalar = 0.4 if (d == 0) else 0.5 if (d == 2) else 0.5 if (d == 3) else 0.4
+		elif (n < 1000 and (d == 3 or d == 4)): scalar = 0.04 if (d == 3) else 0.10
+		else: scalar = 0.001 if (d == 0) else 0.018 if (d == 2) else 0.07 if (d == 3) else 0.15
+
+		if (d == 0): output.append(3.0 / (0.13374127083715834 * n + 2.1684804907091539) + scalar)
+		elif (d == 2): output.append(2.0 / (0.017243763166416404 * n + 2.0175175984670837) + scalar)
+		elif (d == 3): output.append(1.5 / (0.0054664079219238727 * n + 1.6732089366215859) + scalar)
+		elif (d == 4): output.append(1.2 / (0.0026841794200285845 * n + 1.0023055625711859) + scalar)
+	
+	return output
+
+    # output = []
+    # for n in ns:
+    #     # Threshold unreliable for small n
+    #     scalar = 0
+    #     if (n < 500): scalar = 0.3 if (d == 0) else 0.6 if (d == 2) else 0.5 if (d == 3) else 0.5
+    #     elif (n < 1000 and d == 0): scalar = 0.1
+    #     else: scalar = 0.01 if (d == 0) else 0.1 if (d == 2) else 0.035 if (d == 3) else 0.04
         
-        if (d == 0): output.append(2 / ((0.10523204120493665 * n + 1.197763419973427) ** (1)) + scalar)
-        elif (d == 2): output.append(1.2 / ((0.16517538261952885 * n + 2.97229280304088) ** (1.0 / 2)) + scalar)
-        elif (d == 3): output.append(1.2 / ((0.23458454621312719 * n + 0.856196376448942) ** (1.0 / 3)) + scalar)
-        elif (d == 4): output.append(1.2 / ((0.24600034088745676 * n + 0.665592765194326) ** (1.0 / 4)) + scalar)
-        else: output.append(-1)
-    return output
+    #     if (d == 0): output.append(2 / ((0.10523204120493665 * n + 1.197763419973427) ** (1)) + scalar)
+    #     elif (d == 2): output.append(1.2 / ((0.16517538261952885 * n + 2.97229280304088) ** (1.0 / 2)) + scalar)
+    #     elif (d == 3): output.append(1.2 / ((0.23458454621312719 * n + 0.856196376448942) ** (1.0 / 3)) + scalar)
+    #     elif (d == 4): output.append(1.2 / ((0.24600034088745676 * n + 0.665592765194326) ** (1.0 / 4)) + scalar)
+    #     else: output.append(-1)
+    # return output
 
 for d in xrange(5):
-	if d in [1, 2, 3, 0,]:
-	# if d in [1]:
+	# if d in [1, 0, 2, 4,]:
+	if d in [1]:
 		continue
 
 	d_csv = 1 if d == 0 else d
@@ -46,32 +60,32 @@ for d in xrange(5):
 	# fit = np.polyfit(numpoints, new_d0 , 1)
 	# print list(fit)
 	### This fit data from form n^-d taken from data n = 10 to 10000
-	fit = []
-	multiplier = 0
-	if (d == 0): 
-		fit = [0.10523204120493665, 21.197763419973427]
-		fit[1] -= 20
-		multiplier = 2
-		scalar = 0.005
-	if (d == 2): 
-		fit = [0.16517538261952885, 22.97229280304088]
-		fit[1] -= 20
-		multiplier = 1.2
-		scalar = 0.1
-	if (d == 3): 
-		fit = [0.23458454621312719, 35.856196376448942]
-		fit[1] -= 35
-		multiplier = 1.2
-		scalar = 0.035
-	if (d == 4): 
-		fit = [0.24600034088745676, 18.665592765194326]
-		fit[1] -= 18
-		multiplier = 1.2
-		scalar = 0.04
-	# multiplier = 1
-	# scalar = 0
-	fit_fn = np.poly1d(fit)
-	# fit_fn is now a function which takes in x and returns an estimate for y
+	# fit = []
+	# multiplier = 0
+	# if (d == 0): 
+	# 	fit = [0.10523204120493665, 21.197763419973427]
+	# 	fit[1] -= 20
+	# 	multiplier = 2
+	# 	scalar = 0.005
+	# if (d == 2): 
+	# 	fit = [0.16517538261952885, 22.97229280304088]
+	# 	fit[1] -= 20
+	# 	multiplier = 1.2
+	# 	scalar = 0.1
+	# if (d == 3): 
+	# 	fit = [0.23458454621312719, 35.856196376448942]
+	# 	fit[1] -= 35
+	# 	multiplier = 1.2
+	# 	scalar = 0.035
+	# if (d == 4): 
+	# 	fit = [0.24600034088745676, 18.665592765194326]
+	# 	fit[1] -= 18
+	# 	multiplier = 1.2
+	# 	scalar = 0.04
+	# # multiplier = 1
+	# # scalar = 0
+	# fit_fn = np.poly1d(fit)
+	# # fit_fn is now a function which takes in x and returns an estimate for y
 
 	xs = list(numpoints)
 	xs.sort()

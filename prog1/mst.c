@@ -268,8 +268,10 @@ int main(int argc, char *argv[]) {
         char *file = "data/output.csv";
         FILE *fp;
         fp = fopen(file, "w");
-        fputs("numpoints,dim,trials,avgweight\n", fp);
+        fputs("numpoints,dim,trials,avgweight,avgtime/trial\n", fp);
         fclose(fp);
+
+        int trials[] = {0, 0, 0, 0, 10000, 10000, 5000, 1000, 300, 300, 100, 30, 10, 5, 5, 5, 5};
 
         for (int dim = 0; dim <= 4; dim++) {
             if (dim == 1) {
@@ -277,16 +279,18 @@ int main(int argc, char *argv[]) {
             }
             printf("Dimension %i\n", dim);
             for (int i = 4; i <= 16; i++) {
-                int n = (int) pow(2, i);
-                int trials[] = {0, 0, 0, 0, 10000, 10000, 5000, 1000, 300, 300, 100, 30, 10, 5, 5, 5, 5};
+                time_t start = time(NULL);
 
+                int n = (int) pow(2, i);
                 float total_weight = 0;
                 printf("Numpoints %i\n", n);
                 calculateAvgWeight(flag, n, trials[i], dim, &total_weight);
                 
+                time_t end = time(NULL);
+
                 // Prints to Output File
                 fp = fopen(file, "a");
-                fprintf(fp, "%i,%i,%i,%f\n", n, dim, trials[i], total_weight / trials[i]);
+                fprintf(fp, "%i,%i,%i,%f,%f\n", n, dim, trials[i], total_weight / trials[i], 1.0 * (end - start) / trials[i]);
                 fclose(fp); 
             } 
         }

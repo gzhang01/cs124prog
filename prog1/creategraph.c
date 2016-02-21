@@ -30,6 +30,11 @@ int randnums = 0;
 //			graph - pointer to edge array containing all edges in graph
 // Output: returns number of edges created; generated graph stored in graph
 int generateGraph(int n, int d, int *cap, edge ***graph) {
+    // Seed RNG
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    srand((unsigned) tv.tv_usec);
+
 	// Obtain threshold
     float th = threshold(n, d);
 
@@ -178,13 +183,6 @@ int generate234d(int n, int d, float th, int *cap, edge ***graph) {
 
 // Generates a random float from 0 to 1
 float randFloat() {
-    if (randnums == 0) {
-        // initialize RNG with microsecond
-        struct timeval tv;
-        gettimeofday(&tv, NULL);
-        srand((unsigned) tv.tv_usec);
-    }
-    randnums = (randnums + 1) % 25;
 	return (float) rand() / (float) RAND_MAX;
 }
 
@@ -210,20 +208,20 @@ float threshold(int n, int d) {
     // Threshold unreliable for small n
     float scalar = 0;
     if (n < 500) {
-        scalar = (d == 0) ? 0.3 : (d == 2) ? 0.6 : (d == 3) ? 0.5 : 0.5;
-    } else if (n < 1000 && d == 0) {
-        scalar = 0.1;
+        scalar = (d == 0) ? 0.4 : (d == 2) ? 0.5 : (d == 3) ? 0.5 : 0.4;
+    } else if (n < 1000 && (d == 3 || d == 4)) {
+        scalar = (d == 3) ? 0.04 : 0.1;
     } else {
-        scalar = (d == 0) ? 0.01 : (d == 2) ? 0.1 : (d == 3) ? 0.035 : 0.04;
+        scalar = (d == 0) ? 0.001 : (d == 2) ? 0.018 : (d == 3) ? 0.07 : 0.15;
     }
     if (d == 0) {
-        return 2 / pow((0.10523204120493665 * n + 1.197763419973427), 1) + scalar;
+        return 3.0 / (0.13374127083715834 * n + 2.1684804907091539) + scalar;
     } else if (d == 2) {
-        return 1.2 / pow((0.16517538261952885 * n + 2.97229280304088), 1.0 / 2) + scalar;
+        return 2.0 / (0.017243763166416404 * n + 2.0175175984670837) + scalar;
     } else if (d == 3) {
-        return 1.2 / pow((0.23458454621312719 * n + 0.856196376448942), 1.0 / 3) + scalar;
+        return 1.5 / (0.0054664079219238727 * n + 1.6732089366215859) + scalar;
     } else if (d == 4) {
-        return 1.2 / pow((0.24600034088745676 * n + 0.665592765194326), 1.0 / 4) + scalar;
+        return 1.2 / (0.0026841794200285845 * n + 1.0023055625711859) + scalar;
     }
 
     // If given d is not valid, return -1 as error
