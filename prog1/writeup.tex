@@ -76,7 +76,7 @@ Thus we wanted some function $k(n)$ that could predict, given $n$, a value $e$ s
 
 Using these scripts, we found that this threshold not only depended on the number of vertices, $n$, but also on the number of dimensions, $d$. We decided to not find one single function that would work for any given $n, d$, but instead found 4 functions that were dependent on $d$. In addition, we found that it would have been difficult to have a good fit for the entire range we were dealing with in a single expression, and so we essentially created piecewise functions. Each of these pieces (0-500, 500-1000, 1000+) were fitted to best approximate the data. Once we implemented pruning based on these threshold functions (see threshold(n, d) in creategraph.c), we saw a mild improvement in performance for our RGGs and a significant improvement in performance for our MST generators. \\
 
-A side note on why we believe our pruning algorithm is correct: if it were not, then the MST produced without pruning would have a smaller total weight than the MST produced with pruning. This would mean that there exists an edge in the graph that should have been included in the MST that was accidentally pruned. However, since we did not trigger our assert statement (which makes sure that the MST has $n - 1$ edges), we must have found $n - 1$ edges that satisfy the properties of the MST. Thus the edge we pruned was replaced by some other edge that must have a larger weight. But if this edge has a larger weight, then it should also have been pruned, and thus it would be impossible for us to produce an MST if we accidentally pruned an edge that should be in the correct MST. Since we do not trigger any assert statements in our running of the program, we are confident that our pruning function adequately overestimates the threshold. \\
+A side note on why we believe our pruning algorithm is correct: if it were not, then the MST produced without pruning would have a smaller total weight than the MST produced with pruning. This would mean that there exists an edge in the graph that should have been included in the MST that was accidentally pruned. However, since we did not trigger our assert statement (which makes sure that the MST has $n - 1$ edges), we must have found $n - 1$ edges that satisfy the properties of the MST. Thus the edge we pruned was replaced by some other edge that must have a larger weight. But if this edge has a larger weight, then it should also have been pruned, and thus it would be impossible for us to produce an MST if we accidentally pruned an edge that should be in the correct MST. Thus we cannot find $n - 1$ edges for our MST in the case where we pruned too much. Our code checks that we found $n - 1$ edges after producing the MST, and if it doesn't, it throws the trial away and reruns it.  \\
 
 The final major issue we came across occurred when we attempted to run our program for $n = 65536$. Our MST generator up to this point had simply allocated more than enough memory to store the complete graph (namely, enough space for nC2 edges). However, this much memory was too big for even the heap. As a result, we changed our RGGs to increase the size of the graph array as needed. In this way, we could allocate a small amount of memory to begin and add more if necessary. This also necessitated we return the number of edges we found so we could know how long the array actually was, so we could manipulate it later. \\
 
@@ -88,11 +88,13 @@ Ultimately, our implementation of RGGs and Kruskal's algorithm was fairly straig
 
 \textbf{Results}
 
-We ran our program a series of times on varying values of $n$ and $d$. Since the problem statement required testing the powers of two, we ran those first. The results are shown in the table below: \\
+We ran our program a series of times on varying values of $n$ and $d$. Since the problem statement required testing the powers of two, we ran those first. The results are shown in the table below: 
 
 \begin{table}[h!]
 \centering
 \caption{Average Weight of MST with $n$ Vertices and Dimension $d$}
+\renewcommand{\arraystretch}{1.1}
+{\setlength{\tabcolsep}{15pt}
 \begin{tabular} {c | c | c | c | c | c  }
 n&trials&d = 0&d = 2&d = 3&d = 4\\ \hline
 16&10000&1.156588&2.706947&4.511162&6.137181\\
@@ -108,7 +110,7 @@ n&trials&d = 0&d = 2&d = 3&d = 4\\ \hline
 16384&5&1.203346&83.127167&423.052734&1008.771790\\
 32768&5&1.203170&117.585678&667.955505&1688.650024\\
 65536&5&1.202927&166.020844&1058.974243&2829.117676\\
-\end{tabular}
+\end{tabular}}
 \label{table:1}
 \end{table}
 
@@ -117,6 +119,8 @@ However, we decided to get a good model, we wanted a few more data points to wor
 \begin{table}[h!]
 \centering
 \caption{Average Weight of MST with $n$ Vertices and Dimension $d$ (con't)}
+\renewcommand{\arraystretch}{1.1}
+{\setlength{\tabcolsep}{15pt}
 \begin{tabular} {c | c | c | c | c | c  }
 n&trials&d = 0&d = 2&d = 3&d = 4\\ \hline
 1000&5&1.2058&20.6530&67.2194&127.9314\\
@@ -134,7 +138,7 @@ n&trials&d = 0&d = 2&d = 3&d = 4\\ \hline
 25000&5&1.2046&102.6266&558.9552&1379.5463\\
 30000&5&1.2033&112.3914&630.0703&1580.5377\\
 40000&5&1.2022&129.8327&762.3553&1958.2277\\
-\end{tabular}
+\end{tabular}}
 \label{table:2}
 \end{table}
 
@@ -172,19 +176,23 @@ n&trials&d = 0&d = 2&d = 3&d = 4\\ \hline
 
 We wanted to find a function $f(n)$ that could model the average weight of the MST given $n$. We notice immediately from the data that the function must depend on both $n$ and $d$. In order to find what this function should be, we graphed the data (shown above). For the $d = 0$ case, if we ignore some initial noise for small values of $n$, it appears that the average weight of the MST is around $1.2$. For the other cases, the relationship is not as clear. The curves look roughly like polynomial functions with fractional powers, so we attempted to fit the data to a function of the form $a \cdot x ^ b + c$. 
 
-Using Python scripts we wrote, we got the following results:
+Using Python scripts we wrote, we got the following results: \\
 
 \begin{table}[h!]
 \centering
 \caption{Coefficients of Best Fit Function}
+\renewcommand{\arraystretch}{1.2}
+{\setlength{\tabcolsep}{15pt}
 \begin{tabular} {c | c | c | c }
 d&a&b&c\\ \hline
 2&0.6543&0.4991&0.2054\\
 3&0.6780&0.6629&0.7354\\
 4&0.7378&0.7439&1.6431\\
-\end{tabular}
+\end{tabular}}
 \label{table:3}
 \end{table}
+
+\pagebreak
 
 We notice that the exponent $b$ roughly takes the form $(d-1)/d$. Using this value of $b$, we recalculated our function to find better fits for $a$ and $c$. The table below summarizes the best fit functions we found for the four values of $d$:
 
