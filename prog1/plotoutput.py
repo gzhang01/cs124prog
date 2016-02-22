@@ -6,6 +6,9 @@ import sys
 file = "data/finalResults.csv"
 csv = np.genfromtxt(file, delimiter="&")
 
+# Sort csv 
+csv = csv[csv[:,0].argsort()]
+
 # Separate data by dimension
 d0 = csv[:,2]
 d2 = csv[:,3]
@@ -15,75 +18,118 @@ ds = [d0, [], d2, d3, d4]
 
 x = np.asarray(csv[:,0])
 
-for d in xrange(5):
-	if d == 1:
-		continue
-	# plt.plot(x, ds[d][:,3])
-	plt.scatter(x, ds[d], 100)
-	plt.show()
-
-# Plot Dimension 0
-# plt.figure(1)
-# plt.plot(d0[:,0], d0[:,3], '.')
-# plt.show()
+# for d in xrange(5):
+# 	if d == 1:
+# 		continue
+# 	# plt.plot(x, ds[d][:,3])
+# 	plt.scatter(x, ds[d], 100)
+# 	plt.show()
 
 from scipy.optimize import curve_fit
 
-def fit_func(x,a,b,c):
-    return a*x**b + c
+# def fit_func(x,a,b,c):
+#     return a*x**b + c
 
-params0 = curve_fit(fit_func, x, d0[:,3])
-[a0, b0, c0] = params0[0]
-# a0 = 19.0172521584 
-# b0 = 0.0761892397838 
-# c0 = -22.4122322355
+# # Fitting Dimension 0
+# # params0 = curve_fit(fit_func, x, ds[2])
+# # [a0, b0, c0] = params0[0]
+# # print "Dimension 2"
+# # print a0, b0, c0
+# # # a0 = 19.0172521584 
+# # # b0 = 0.0761892397838 
+# # # c0 = -22.4122322355
 
-plt.figure(1)
-plt.plot(x, fit_func(x,a0,b0,c0))
-plt.scatter(x,d0[:,3])
-plt.show()
+# # plt.figure(1)
+# # plt.plot(x, fit_func(x,a0,b0,c0))
+# # plt.scatter(x,ds[4])
+# # plt.show()
 
-# Plot Dimension 2
+# # Fitting Dimension 2
+# params2 = curve_fit(fit_func, x, ds[2])
+# [a2, b2, c2] = params2[0]
+# print "Dimension 2"
+# print a2, b2, c2
+# # a2 = 0.654348253219
+# # b2 = 0.499068430367
+# # c2 = 0.205424972377
+
 # plt.figure(2)
-# plt.plot(d2[:,0], d2[:,3], '.')
+# plt.plot(x, fit_func(x,a2,b2,c2))
+# plt.scatter(x,ds[2])
+# plt.show()
 
-params2 = curve_fit(fit_func, x, d2[:,3])
-[a2, b2, c2] = params2[0]
-# a2 = 2.37581906081 
-# b2 = 0.469370994834 
-# c2 = 17.0804317712
+# # Fitting Dimension 3
+# params3 = curve_fit(fit_func, x, ds[3])
+# [a3, b3, c3] = params3[0]
+# print "Dimension 3"
+# print a3, b3, c3
+# # a3 = 0.678033837293
+# # b3 = 0.662929407821
+# # c3 = 0.735449923079
+
+# plt.figure(3)
+# plt.plot(x, fit_func(x,a3,b3,c3))
+# plt.scatter(x,ds[3])
+# plt.show()
+
+# # Fitting Dimension 4
+# params4 = curve_fit(fit_func, x, ds[4])
+# [a4, b4, c4] = params4[0]
+# print "Dimension 4"
+# print a4, b4, c4
+# # a4 = 0.737807664062
+# # b4 = 0.743943378049
+# # c4 = 1.64307260612
+
+# plt.figure(4)
+# plt.plot(x, fit_func(x,a4,b4,c4))
+# plt.scatter(x,ds[4])
+# plt.show()
+
+#####################################################################
+
+# Looks like polynomial is to the power of (d-1)/d
+def fit_func_2(x,a,c):
+	return a*x**(1.0/2.0) + c
+
+def fit_func_3(x,a,c):
+	return a*x**(2.0/3.0) + c
+
+def fit_func_4(x,a,c):
+	return a*x**(3.0/4.0) + c
+
+# Fitting Dimension 2
+params2 = curve_fit(fit_func_2, x, ds[2])
+[a2, c2] = params2[0]
+print("Dimension 2 %.4f %.4f" %(a2,c2))
+# a2 = 0.6477
+# c2 = 0.2858
 
 plt.figure(2)
-plt.plot(x, fit_func(x,a2,b2,c2))
-plt.scatter(x,d2[:,3])
+plt.plot(x, fit_func_2(x,a2,c2))
+plt.scatter(x,ds[2])
 plt.show()
 
-# Plot Dimension 3
-# plt.figure(3)
-# plt.plot(d3[:,0], d3[:,3], '.')
-
-params3 = curve_fit(fit_func, x, d3[:,3])
-[a3, b3, c3] = params3[0]
-# a2 = 2.22730381196
-# b2 = 0.635446728239 
-# c2 = 442.716136741
+# Fitting Dimension 3
+params3 = curve_fit(fit_func_3, x, ds[3])
+[a3, c3] = params3[0]
+print("Dimension 3 %.4f %.4f" %(a3,c3))
+# a3 = 0.6510
+# c3 = 1.9652
 
 plt.figure(3)
-plt.plot(x, fit_func(x,a3,b3,c3))
-plt.scatter(x,d3[:,3])
+plt.plot(x, fit_func_3(x,a3,c3))
+plt.scatter(x,ds[3])
 plt.show()
 
-# Plot Dimension 4
-# plt.figure(4)
-# plt.plot(d4[:,0], d4[:,3], '.')
-
-params4 = curve_fit(fit_func, x, d4[:,3])
-[a4, b4, c4] = params4[0]
-# a2 = 2.03071148747
-# b2 = 0.733142562993
-# c2 = 2995.5716482
+# Fitting Dimension 4
+params4 = curve_fit(fit_func_4, x, ds[4])
+[a4, c4] = params4[0]
+print("Dimension 4 %.4f %.4f" %(a4,c4))
+# a4 = 0.6907
+# c4 = 5.9482
 
 plt.figure(4)
-plt.plot(x, fit_func(x,a4,b4,c4))
-plt.scatter(x,d4[:,3])
+plt.plot(x, fit_func_4(x,a4,c4))
+plt.scatter(x,ds[4])
 plt.show()
