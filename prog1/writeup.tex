@@ -31,6 +31,8 @@ https://github.com/gzhang01/cs124prog/tree/master/prog1 \\
 
 Our task was to find appropriate functions $f(n)$ to model the weight of the minimum spanning tree (MST) of a random, complete graph of $n$ edges (in the 0-dimensional case) or $n$ vertices (in the 2, 3, and 4-dimensional cases). Using C, we implemented a random graph generator and used Kruskal's algorithm to produce the MST of the graph. Our results showed that for the $d = 0$ case, we have the best fit function $f(n) = 1.2$, and for $d = 2, 3,$ and $4$, we have a best fit function of the form $f(n) = a\cdot n^{(d - 1)/d} + c$, with constants $a$ and $c$ that are dependent on the value of $d$.  \\
 
+\bigskip
+
 \textbf{Implementation}
 
 Our first task was to construct the random graph generator (RGG) (see creategraph.c). We started with the 0-dimensional case, where we just assign each edge a random floating point value as a weight. To produce this random value, we seeded C's random number generator (RNG) with the current microsecond time, and used C's built-in rand() function. Of course, rand() produces a random integer between 0 and RAND\_MAX, and so we converted them to floats and normalized so our values would fall between 0 and 1. \\
@@ -39,22 +41,20 @@ We then needed some way of representing an edge. We defined a new "edge" struct 
 
 The 2, 3, and 4-dimensional cases were simple as well. We created a two dimensional (n by d) array, where each row represents a d-dimensional point. For each of the coordinates, we produced a random floating point value, and for all possible combination of two vertices, we produced an edge struct. We now had two separate functions for generating graphs, so we wrote a wrapper function that seeds the RNG and then decides with generator to call based on the input value d. To finish off the graph generators, we wrote a simple print function that would allow us to test and debug our graphs. \\
 
-Now that we had a way to generate random graphs, we could move on to producing the MST of a given graph. We decided to go with Kruskal's algorithm, as we thought the real-world run-time of Prim's algorithm would be much longer than Kruskal's. We noticed that if we were to use Prim's algorithm, we would have to look at all vertices connected to our current MST, and we decided that repeated looping through all those edges would be very time-inefficient. With Kruskal's algorithm, the main time bottleneck would be sorting all the edges, but after that, we would simply take the shortest of those remaining. We decided the one-time cost of sorting was preferable to the repeated searching we would have to do with Prim's. \\
+Now that we had a way to generate random graphs, we could move on to producing the MST of a given graph. We decided to go with Kruskal's algorithm, as we thought the real-world run-time of Prim's algorithm would be much longer than Kruskal's. We noticed that if we were to use Prim's algorithm, we would have to look at all vertices connected to our current MST, and we decided that repeatedly looping through all those edges would be very time-inefficient. With Kruskal's algorithm, the main time bottleneck would be sorting all the edges, but after that, we would simply take the shortest of those remaining. We decided the one-time cost of sorting was preferable to the repeated searching we would have to do with Prim's. \\\\
 
 Our task then was to implement a disjoint set data structure (see node.c). We created a node struct containing a value, a pointer to its parent node, and a rank, and implemented the functions makeSet, find, and join. Their implementations are very similar to the pseudocode we were given in class, so we will not go into specifics here. We again created a print function to help test and debug our code. \\
 
 With the disjoint set data structure in place, we began the implementation of Kruskal's algorithm (see mst.c). We wrote a merge sort function to sort our edges. We then took the edge with the lowest weight, determined if the two vertices are already in our MST, and if not, added the edge to our MST. To save time when running the algorithm, we kept track of how many edges we had already inserted into our MST, and stopped searching when we reached the desired number (number of vertices minus one). \\
 
-We now had a working algorithm to find the MST of a randomly generated complete graph. Our tests for small $n$ passed easily, but unfortunately, when we tried for larger values of $n$, we ran into some memory errors. Our implementation had put certain data structures (mostly arrays) on the stack, and as $n$ increased, the amount of memory needed to store the data structures increased as well. Ultimately, we began touching memory we didn't have access to when trying to access our large arrays, triggering segmentation faults. To resolve this issue, we ended up putting all data structures on the heap and passing around pointers instead. \\
-
 \begin{wrapfigure}{r}{0.5\textwidth}
-\vspace{0cm}
+\vspace{-0.5cm}
 \centering
 \includegraphics[width=0.4\textwidth]{img/knd0n1.png}
 \caption{Actual vs. Predicted Max Edge Length in MST (n $\in$ (0, 500), d = 0)}
 \end{wrapfigure}
 
-The next issue we faced was run time. As $n$ increased, the number of edges increased on the order of $n^2$, and so it became more and more time and memory costly to generate and sort the graph. To resolve this, we decided to prune our graph as we were generating it. We knew that once we had found a MST for a given graph, the rest of the edges that had not been searched yet had weights that were simply too high to possibly be included in the graph. We wanted to find a general estimate for this threshold, so that we could simply ignore the edge if we generate one that's too long and save time and space by not having to store and sort it. \\
+We now had a working algorithm to find the MST of a randomly generated complete graph. Our tests for small $n$ passed easily, but unfortunately, when we tried for larger values of $n$, we ran into some memory errors. Our implementation had put certain data structures (mostly arrays) on the stack, and as $n$ increased, the amount of memory needed to store the data structures increased as well. Ultimately, we began touching memory we didn't have access to when trying to access our large arrays, triggering segmentation faults. To resolve this issue, we ended up putting all data structures on the heap and passing around pointers instead. \\
 
 \begin{wrapfigure}{r}{0.5\textwidth}
 \vspace{0cm}
@@ -63,13 +63,16 @@ The next issue we faced was run time. As $n$ increased, the number of edges incr
 \caption{Actual vs. Predicted Max Edge Length in MST (n $\in$ (500, 1000), d = 0)}
 \end{wrapfigure}
 
-Thus we wanted some function $k(n)$ that could predict, given $n$, or the number of vertices in the graph, a value $e$ such that any edge length greater than $e$ could not possibly end up in the MST. We tweaked our program to record the maximum edge length in an MST and started collecting data on it. Using some Python scripts we wrote, we plotted the maximum edge length in a MST with $n$ vertices (sample graphs seen at right). \\
+The next issue we faced was run time. As $n$ increased, the number of edges increased on the order of $n^2$, and so it became more and more time and memory costly to generate and sort the graph. To resolve this, we decided to prune our graph as we were generating it. We knew that once we had found a MST for a given graph, the rest of the edges that had not been searched yet had weights that were simply too high to possibly be included in the graph. We wanted to find a general estimate for this threshold, so that we could simply ignore the edge if we generate one that's too long and save time and space by not having to store and sort it. \\
 
 \begin{wrapfigure}{r}{0.5\textwidth}
+\vspace{-0.5cm}
 \centering
 \includegraphics[width=0.4\textwidth]{img/knd0n3.png}
 \caption{Actual vs. Predicted Max Edge Length in MST (n $\in$ (1000, 60000), d = 0)}
 \end{wrapfigure}
+
+Thus we wanted some function $k(n)$ that could predict, given $n$, a value $e$ such that any edge length greater than $e$ could not possibly end up in the MST. We tweaked our program to record the maximum edge length in an MST. Using some Python scripts we wrote, we plotted the maximum edge length in a MST with $n$ vertices (sample graphs on right). \\
 
 Using these scripts, we found that this threshold not only depended on the number of vertices, $n$, but also on the number of dimensions, $d$. We decided to not find one single function that would work for any given $n, d$, but instead found 4 functions that were dependent on $d$. In addition, we found that it would have been difficult to have a good fit for the entire range we were dealing with in a single expression, and so we essentially created piecewise functions. Each of these pieces (0-500, 500-1000, 1000+) were fitted to best approximate the data. Once we implemented pruning based on these threshold functions (see threshold(n, d) in creategraph.c), we saw a mild improvement in performance for our RGGs and a significant improvement in performance for our MST generators. \\
 
@@ -200,12 +203,53 @@ d&$f(n)$\\ \hline
 \label{table:4}
 \end{table}
 
+We decided to graph the scatterplots along with their best fit for better visualization. Note that we scaled the y-axis of the 0-dimension graph to the range $[0, 2]$ so the visualization will not be as affected by noise. \\
+
+\begin{figure}[h!]
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=0.8\linewidth]{img/d0_fit.png}
+  \caption{Best Fit Plot ($d = 0$)}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=0.8\linewidth]{img/d2_fit.png}
+  \caption{Best Fit Plot ($d = 2$)}
+  \label{fig:sub2}
+\end{subfigure} \\ % 
 \bigskip
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=0.8\linewidth]{img/d3_fit.png}
+  \caption{Best Fit Plot ($d = 3$)}
+  \label{fig:sub3}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=0.8\linewidth]{img/d4_fit.png}
+  \caption{Best Fit Plot ($d = 4$)}
+  \label{fig:sub4}
+\end{subfigure}%
+\caption{Best Fit Graphs With Data}
+\end{figure}
+
+\pagebreak
 
 \textbf{Discussion}
 
-The purpose of the problem was twofold: to experience some of the problems involved with implementing an algorithm and exploring how minimum spanning trees behave in random graphs. We discussed much of the former in our implementation section, and so we dedicate this discussion section to talking about our findings from the latter. 
+The purpose of the problem was twofold: to experience some of the problems involved with implementing an algorithm and exploring how minimum spanning trees behave in random graphs. We discussed much of the former in our implementation section, and so we dedicate this discussion section to talking about our findings from the latter. \\
 
+We were relatively surprised by the results. From the data, we see that the $d = 0$ case very obviously converges at $1.2$. Our intuition for the reason behind this is that despite the fact that we're adding more edges, the average edge length in the MST should decrease proportionally. This is because we are simply choosing edge lengths randomly on the interval from 0 to 1, and so the range of the smallest $n - 1$ edges decreases as $n$ increases. Granted our MST does not necessarily contain the smallest $n - 1$ edges, but the idea that the smallest proportion of our edges decreases remains true. \\
+
+In the $d = 2$ case, we can consider all the points lying in the unit square. The weight of the MST, which is the lengths of all the edges in the MST, can be thought of as the amount of ink needed to draw the MST. With this analogy, we can see that as we increase the number of vertices, and thus increase the number of edges in our MST, we also increase the amount of ink we use to draw the MST. This analogy might lead us to assume that the weight of the MST should be bounded (as by the area of the unit square). As we can see from the function, this is not true. Indeed, our analogy still holds, because the weight of the MST is given by the sum of the lengths of edges drawn. In the case where $n \to \infty$, we essentially shade the entire unit square, but the linear distance of all the lines (which have width 0) is infinity. We can extend this idea to the higher dimensions to see why they grow without bound as well. \\
+
+We find the phenomenon with the exponent to be intriguing. Unfortunately, we cannot explain the exponent at this time. Please still love us $<$3. \\
+
+During this process, we collected a bit of data on run time of the algorithm. We do not have enough data to do a rigorous analysis, but some obvious observations are that run time greatly increases as $n$ increases (we have more edges) and run time greatly increases as $d$ increases (we have $n^2$ edges compared to $n$ edges in the $d=0$ case, and we do more math to determine the edge lengths). Of course, the run time decreased dramatically after implementing our pruning function. A breakdown of the time spent revealed that most of the time was spent creating the complete graph and not the MST. Indeed, in the $d=4, n = 65536$ case, we saw that constructing the MST given the complete graph only took $4$ seconds. This suggests we did a good job with our pruning. \\
+
+One other observation we made was in regards to the random number generator. We started out by seeding only at the beginning of creating a complete graph. However, midway through coding, we decided to seed more often (every 25 calls to rand()). Curiously, this resulted in very different results. It is hard to discuss the $d \ne 0$ cases, as their functions grow, but in the $d = 0$ case, we saw that seeding more often did not result in convergence to $1.2$. During coding (with a single seed), we were testing very often for various values of $n$ and fairly consistently got a value of $1.2$. However, when we seeded more often, we saw more variance in the data, which made us suspect that the results were not as reliable. Thus we returned to seeding once, and we were encouraged by the final function results. 
 
 
 
