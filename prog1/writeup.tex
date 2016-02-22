@@ -29,7 +29,7 @@ https://github.com/gzhang01/cs124prog/tree/master/prog1 \\
 
 \textbf{Abstract}
 
-Our task was to find appropriate functions $f(n)$ to model the weight of the minimum spanning tree (MST) of a random, complete graph of $n$ edges (in the 0-dimensional case) or $n$ vertices (in the 2, 3, and 4-dimensional cases). Using C, we implemented a random graph generator and used Kruskal's algorithm to produce the MST of the graph. Our results showed that {\color{red} FINISH FINISH FINISH (when we have the functions)} \\
+Our task was to find appropriate functions $f(n)$ to model the weight of the minimum spanning tree (MST) of a random, complete graph of $n$ edges (in the 0-dimensional case) or $n$ vertices (in the 2, 3, and 4-dimensional cases). Using C, we implemented a random graph generator and used Kruskal's algorithm to produce the MST of the graph. Our results showed that for the $d = 0$ case, we have the best fit function $f(n) = 1.2$, and for $d = 2, 3,$ and $4$, we have a best fit function of the form $f(n) = a\cdot n^{(d - 1)/d} + c$, with constants $a$ and $c$ that are dependent on the value of $d$.  \\
 
 \textbf{Implementation}
 
@@ -71,7 +71,9 @@ Thus we wanted some function $k(n)$ that could predict, given $n$, or the number
 \caption{Actual vs. Predicted Max Edge Length in MST (n $\in$ (1000, 60000), d = 0)}
 \end{wrapfigure}
 
-Using these scripts, we found that this threshold not only depended on the number of vertices, $n$, but also on the number of dimensions, $d$. We decided to not find one single function that would work for any given $n, d$, but instead found 4 functions that were dependent on $d$. In addition, we found that it would have been difficult to have a good fit for the entire range we were dealing with in a single expression, and so we essentially created piecewise functions. Each of these pieces (0-500, 500-1000, 100+) were fitted to best approximate the data. Once we implemented pruning based on these threshold functions (see threshold(n, d) in creategraph.c), we saw a mild improvement in performance for our RGGs and a significant improvement in performance for our MST generators. \\
+Using these scripts, we found that this threshold not only depended on the number of vertices, $n$, but also on the number of dimensions, $d$. We decided to not find one single function that would work for any given $n, d$, but instead found 4 functions that were dependent on $d$. In addition, we found that it would have been difficult to have a good fit for the entire range we were dealing with in a single expression, and so we essentially created piecewise functions. Each of these pieces (0-500, 500-1000, 1000+) were fitted to best approximate the data. Once we implemented pruning based on these threshold functions (see threshold(n, d) in creategraph.c), we saw a mild improvement in performance for our RGGs and a significant improvement in performance for our MST generators. \\
+
+A side note on why we believe our pruning algorithm is correct: if it were not, then the MST produced without pruning would have a smaller total weight than the MST produced with pruning. This would mean that there exists an edge in the graph that should have been included in the MST that was accidentally pruned. However, since we did not trigger our assert statement (which makes sure that the MST has $n - 1$ edges), we must have found $n - 1$ edges that satisfy the properties of the MST. Thus the edge we pruned was replaced by some other edge that must have a larger weight. But if this edge has a larger weight, then it should also have been pruned, and thus it would be impossible for us to produce an MST if we accidentally pruned an edge that should be in the correct MST. Since we do not trigger any assert statements in our running of the program, we are confident that our pruning function adequately overestimates the threshold. \\
 
 The final major issue we came across occurred when we attempted to run our program for $n = 65536$. Our MST generator up to this point had simply allocated more than enough memory to store the complete graph (namely, enough space for nC2 edges). However, this much memory was too big for even the heap. As a result, we changed our RGGs to increase the size of the graph array as needed. In this way, we could allocate a small amount of memory to begin and add more if necessary. This also necessitated we return the number of edges we found so we could know how long the array actually was, so we could manipulate it later. \\
 
@@ -107,9 +109,33 @@ n&trials&d = 0&d = 2&d = 3&d = 4\\ \hline
 \label{table:1}
 \end{table}
 
-However, we decided to get a good model, we wanted a few more data points to work with, especially
+However, we decided to get a good model, we wanted a few more data points to work with. We ended up collecting the following additional data:
 
-We wanted to find a function $f(n)$ that could model the average weight of the MST given $n$. We notice immediately from this data that the function must depend on both $n$ and $d$. In order to find what this function should be, we graphed this data:
+\begin{table}[h!]
+\centering
+\caption{Average Weight of MST with $n$ Vertices and Dimension $d$ (con't)}
+\begin{tabular} {c | c | c | c | c | c  }
+n&trials&d = 0&d = 2&d = 3&d = 4\\ \hline
+1000&5&1.2058&20.6530&67.2194&127.9314\\
+2000&5&1.1908&29.1936&105.1252&212.8607\\
+3000&5&1.1990&35.9798&137.0924&287.7014\\
+4000&5&1.2109&41.2662&166.7150&355.9292\\
+5000&5&1.2077&46.0850&192.8012&418.7740\\
+6000&5&1.2029&50.6606&216.8631&479.7808\\
+7000&5&1.1992&54.4482&240.7518&537.3342\\
+8000&5&1.1970&58.2977&263.0330&593.2632\\
+9000&5&1.2033&61.7239&284.6641&647.4437\\
+10000&5&1.2076&65.0109&305.5179&700.4604\\
+15000&5&1.2019&79.8070&398.3995&944.5295\\
+20000&5&1.2034&91.8058&481.6500&1168.7787\\
+25000&5&1.2046&102.6266&558.9552&1379.5463\\
+30000&5&1.2033&112.3914&630.0703&1580.5377\\
+40000&5&1.2022&129.8327&762.3553&1958.2277\\
+\end{tabular}
+\label{table:2}
+\end{table}
+
+\pagebreak
 
 \begin{figure}
 \centering
@@ -140,6 +166,45 @@ We wanted to find a function $f(n)$ that could model the average weight of the M
 \end{subfigure}%
 \caption{Plots of Results}
 \end{figure}
+
+We wanted to find a function $f(n)$ that could model the average weight of the MST given $n$. We notice immediately from the data that the function must depend on both $n$ and $d$. In order to find what this function should be, we graphed the data (shown above). For the $d = 0$ case, if we ignore some initial noise for small values of $n$, it appears that the average weight of the MST is around $1.2$. For the other cases, the relationship is not as clear. The curves look roughly like polynomial functions with fractional powers, so we attempted to fit the data to a function of the form $a \cdot x ^ b + c$. 
+
+Using Python scripts we wrote, we got the following results:
+
+\begin{table}[h!]
+\centering
+\caption{Coefficients of Best Fit Function}
+\begin{tabular} {c | c | c | c }
+d&a&b&c\\ \hline
+2&0.6543&0.4991&0.2054\\
+3&0.6780&0.6629&0.7354\\
+4&0.7378&0.7439&1.6431\\
+\end{tabular}
+\label{table:3}
+\end{table}
+
+We notice that the exponent $b$ roughly takes the form $(d-1)/d$. Using this value of $b$, we recalculated our function to find better fits for $a$ and $c$. The table below summarizes the best fit functions we found for the four values of $d$:
+
+\begin{table}[h!]
+\centering
+\caption{Best Fit Functions}
+\renewcommand{\arraystretch}{1.3}
+{\setlength{\tabcolsep}{15pt}
+\begin{tabular} {c | c  }
+d&$f(n)$\\ \hline
+0&$f(n) = 1.2$\\
+2&$f(n) = 0.6477n^{1/2} + 0.2858$\\
+3&$f(n) = 0.6510n^{2/3}+1.9652$\\
+4&$f(n) = 0.6907n^{3/4}+5.9482$\\
+\end{tabular}}
+\label{table:4}
+\end{table}
+
+\bigskip
+
+\textbf{Discussion}
+
+The purpose of the problem was twofold: to experience some of the problems involved with implementing an algorithm and exploring how minimum spanning trees behave in random graphs. We discussed much of the former in our implementation section, and so we dedicate this discussion section to talking about our findings from the latter. 
 
 
 

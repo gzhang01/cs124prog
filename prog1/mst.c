@@ -258,7 +258,7 @@ int main(int argc, char *argv[]) {
             } else if (flag == 2) {
                 fprintf(fp, "%3i,%.4f,%.4f,%.4f,%.4f\n", numpoints, maxWeight[0], maxWeight[2], maxWeight[3], maxWeight[4]);
             } else if (flag == 6) {
-                fprintf(fp, "%3i,%i,%.4f,%.4f,%.4f,%.4f\n", numpoints, trials, maxWeight[0], maxWeight[2], maxWeight[3], maxWeight[4]);
+                fprintf(fp, "%3i&%i&%.4f&%.4f&%.4f&%.4f\n", numpoints, trials, maxWeight[0] / trials, maxWeight[2] / trials, maxWeight[3] / trials, maxWeight[4] / trials);
             }
             fclose(fp);     
         } 
