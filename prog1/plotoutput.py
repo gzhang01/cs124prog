@@ -129,3 +129,11 @@ plt.scatter(x,ds[0],100)
 plt.xlim([-10000, 70000])
 plt.ylim([0, 2])
 plt.show()
+
+#####################################################################
+
+# Zoom in
+plt.figure(4)
+plt.plot(x[:10], fit_func_4(x,a4,c4)[:10])
+plt.scatter(x[:10], ds[4][:10],100)
+plt.show()
