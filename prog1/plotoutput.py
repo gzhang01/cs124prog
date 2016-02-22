@@ -30,20 +30,6 @@ from scipy.optimize import curve_fit
 # def fit_func(x,a,b,c):
 #     return a*x**b + c
 
-# # Fitting Dimension 0
-# # params0 = curve_fit(fit_func, x, ds[2])
-# # [a0, b0, c0] = params0[0]
-# # print "Dimension 2"
-# # print a0, b0, c0
-# # # a0 = 19.0172521584 
-# # # b0 = 0.0761892397838 
-# # # c0 = -22.4122322355
-
-# # plt.figure(1)
-# # plt.plot(x, fit_func(x,a0,b0,c0))
-# # plt.scatter(x,ds[4])
-# # plt.show()
-
 # # Fitting Dimension 2
 # params2 = curve_fit(fit_func, x, ds[2])
 # [a2, b2, c2] = params2[0]
@@ -88,7 +74,7 @@ from scipy.optimize import curve_fit
 
 #####################################################################
 
-# Looks like polynomial is to the power of (d-1)/d
+# Looks like polynomial is to the power of (d-1)/d for d=2,3,4
 def fit_func_2(x,a,c):
 	return a*x**(1.0/2.0) + c
 
@@ -107,7 +93,7 @@ print("Dimension 2 %.4f %.4f" %(a2,c2))
 
 plt.figure(2)
 plt.plot(x, fit_func_2(x,a2,c2))
-plt.scatter(x,ds[2])
+plt.scatter(x,ds[2],100)
 plt.show()
 
 # Fitting Dimension 3
@@ -119,7 +105,7 @@ print("Dimension 3 %.4f %.4f" %(a3,c3))
 
 plt.figure(3)
 plt.plot(x, fit_func_3(x,a3,c3))
-plt.scatter(x,ds[3])
+plt.scatter(x,ds[3],100)
 plt.show()
 
 # Fitting Dimension 4
@@ -131,5 +117,15 @@ print("Dimension 4 %.4f %.4f" %(a4,c4))
 
 plt.figure(4)
 plt.plot(x, fit_func_4(x,a4,c4))
-plt.scatter(x,ds[4])
+plt.scatter(x,ds[4],100)
+plt.show()
+
+#####################################################################
+
+# Avg Total Weight converges to 1.2 for dimension 0
+plt.figure(1)
+plt.plot([-10000, 70000], [1.2, 1.2])
+plt.scatter(x,ds[0],100)
+plt.xlim([-10000, 70000])
+plt.ylim([0, 2])
 plt.show()
