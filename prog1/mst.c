@@ -161,7 +161,7 @@ void calculateAvgWeight(int flag, int n, int trials, int d, float* totalWeight) 
         if (flag == 4) { printf("Time to generate MST: %li\n", mstDone - graphDone); }
 
         if (mstEdges == n - 1) {
-            if (flag == 0 || flag == 4 || flag == 5) {
+            if (flag == 0 || flag == 4 || flag == 5 || flag == 6) {
                 // Find weight of tree
                 float weight = 0;
                 for (int i = 0; i < n - 1; i++) {
@@ -214,7 +214,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    if ((flag == 1 || flag == 2) && argc != 7) {
+    if ((flag == 1 || flag == 2 || flag == 6) && argc != 7) {
         printf("Usage: ./randmst (1/2) numpoints numtrials dimension start mult\n");
         return 1;
     }
@@ -231,12 +231,12 @@ int main(int argc, char *argv[]) {
     // This is used for estimating k(n)
     // flag 1: Calculate average max weight of edge of MST from 2 to n for all dimensions
     // flag 2: Calculate absolute max weight of edge in all trials
-    else if (flag == 1 || flag == 2) {
+    else if (flag == 1 || flag == 2 || flag == 6) {
         int start = (int) strtol(argv[5], NULL, 10);
         int multiple = (int) strtol(argv[6], NULL, 10);
 
         // File to store data in
-        char *file = (flag == 1) ? "data/knt100avg_new.csv" : "data/knt100max_new.csv";
+        char *file = (flag == 1) ? "data/knt100avg_new.csv" : (flag == 2) ? "data/knt100max_new.csv" : "data/finalResults.csv";
 
         // Store Average Max Weight in Output File
         FILE *fp;
@@ -257,7 +257,9 @@ int main(int argc, char *argv[]) {
                 fprintf(fp, "%3i,%.4f,%.4f,%.4f,%.4f\n", numpoints, maxWeight[0] / trials, maxWeight[2] / trials, maxWeight[3] / trials, maxWeight[4] / trials);
             } else if (flag == 2) {
                 fprintf(fp, "%3i,%.4f,%.4f,%.4f,%.4f\n", numpoints, maxWeight[0], maxWeight[2], maxWeight[3], maxWeight[4]);
-            }  
+            } else if (flag == 6) {
+                fprintf(fp, "%3i,%i,%.4f,%.4f,%.4f,%.4f\n", numpoints, trials, maxWeight[0], maxWeight[2], maxWeight[3], maxWeight[4]);
+            }
             fclose(fp);     
         } 
     }

@@ -22,8 +22,6 @@ float distance(int d, float p1[d], float p2[d]);
 float square(float n);
 float threshold(int n, int d);
 
-int randnums = 0;
-
 // Generates a graph with n vertices in adjacency matrix form
 // Input: 	n - number of vertices
 // 			d - dimension of vertex. if 0, then random edge lengths

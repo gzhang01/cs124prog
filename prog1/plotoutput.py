@@ -3,16 +3,24 @@ import matplotlib.pyplot as plt
 import sys
 
 # Import CSV
-file = "data/output.csv"
-csv = np.genfromtxt(file, delimiter=",")
+file = "data/finalResults.csv"
+csv = np.genfromtxt(file, delimiter="&")
 
 # Separate data by dimension
-d0 = csv[1:14,:]
-d2 = csv[14:27,:]
-d3 = csv[27:40,:]
-d4 = csv[40:,:]
+d0 = csv[:,2]
+d2 = csv[:,3]
+d3 = csv[:,4]
+d4 = csv[:,5]
+ds = [d0, [], d2, d3, d4]
 
-x = np.asarray(d0[:,0])
+x = np.asarray(csv[:,0])
+
+for d in xrange(5):
+	if d == 1:
+		continue
+	# plt.plot(x, ds[d][:,3])
+	plt.scatter(x, ds[d], 100)
+	plt.show()
 
 # Plot Dimension 0
 # plt.figure(1)

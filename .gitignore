@@ -1,2 +1,5 @@
 *.o
 randmst.dSYM/
+*.aux
+*.log
+*.synctex.gz
