@@ -15,6 +15,8 @@
 #include <assert.h>
 #include "matrix.h"
 
+#define NUMSPLIT 4
+
 matrix* generateRandomMatrix(int r, int c);
 matrix* createMatrix(int r, int c);
 void freeMatrix(matrix* mtx);
@@ -24,6 +26,10 @@ void checkElement(matrix* mtx, int i, int j);
 int getRows(matrix* mtx);
 int getCols(matrix* mtx);
 void splitMatrix(matrix** matrices, matrix* mtx);
+void freeSplitMatrices(matrix** matrices);
+void matrixAdd(matrix* s, matrix* m1, matrix* m2);
+void matrixSubtract(matrix* s, matrix* m1, matrix* m2);
+void matrixAddAsserts(matrix* s, matrix* m1, matrix* m2);
 void printMatrix(matrix* mtx);
 
 
@@ -98,7 +104,7 @@ int getCols(matrix* mtx) {
 //	M -->	|		  |
 //			|  C   D  |
 void splitMatrix(matrix** matrices, matrix* mtx) {
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < NUMSPLIT; i++) {
 		matrices[i] = malloc(sizeof(matrix));
 
 		// Total rows and array stay the same
@@ -124,6 +130,47 @@ void splitMatrix(matrix** matrices, matrix* mtx) {
 			matrices[i]->endCol = mtx->endCol;
 		}
 	}
+}
+
+// Frees matrices allocated during split
+void freeSplitMatrices(matrix** matrices) {
+	for (int i = 0; i < NUMSPLIT; i++) {
+		free(matrices[i]);
+	}
+}
+
+// Adds two matrices (m1 + m2) and stores result in s
+void matrixAdd(matrix* s, matrix* m1, matrix* m2) {
+	// Matrix addition checks
+	matrixAddAsserts(s, m1, m2);
+
+	// Add elements individually
+	for (int i = 0; i < getRows(m1); i++) {
+		for (int j = 0; j < getCols(m1); j++) {
+			setElement(s, i, j, getElement(m1, i, j) + getElement(m2, i, j));
+		}
+	}
+}
+
+// Subtracts two matrices (m1 - m2) and stores result in s
+void matrixSubtract(matrix* s, matrix* m1, matrix* m2) {
+	// Matrix addition checks
+	matrixAddAsserts(s, m1, m2);
+
+	// Subtract elements individually
+	for (int i = 0; i < getRows(m1); i++) {
+		for (int j = 0; j < getCols(m1); j++) {
+			setElement(s, i, j, getElement(m1, i, j) - getElement(m2, i, j));
+		}
+	}
+}
+
+// Sanity checks for matrix addition
+void matrixAddAsserts(matrix* s, matrix* m1, matrix* m2) {
+	assert (getRows(m1) == getRows(m2) && "Dimensions for matrix addition do not match!");
+	assert (getCols(m1) == getCols(m2) && "Dimensions for matrix addition do not match!");
+	assert (getRows(m1) == getRows(s) && "Dimensions for matrix addition do not match!");
+	assert (getCols(m1) == getCols(s) && "Dimensions for matrix addition do not match!");
 }
 
 

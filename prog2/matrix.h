@@ -47,5 +47,14 @@ int getCols(matrix* mtx);
 //			|  C   D  |
 void splitMatrix(matrix** matrices, matrix* mtx);
 
+// Frees matrices allocated during split
+void freeSplitMatrices(matrix** matrices);
+
+// Adds two matrices (m1 + m2) and stores result in 
+void matrixAdd(matrix* s, matrix* m1, matrix* m2);
+
+// Subtracts two matrices (m1 - m2) and stores result in s
+void matrixSubtract(matrix* s, matrix* m1, matrix* m2);
+
 // Pretty prints matrix to console
 void printMatrix(matrix* mtx);
