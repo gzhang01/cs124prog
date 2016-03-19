@@ -20,8 +20,11 @@ matrix* createMatrix(int r, int c);
 void freeMatrix(matrix* mtx);
 int getElement(matrix* mtx, int i, int j);
 void setElement(matrix* mtx, int i, int j, int e);
+void checkElement(matrix* mtx, int i, int j);
+int getRows(matrix* mtx);
+int getCols(matrix* mtx);
+void splitMatrix(matrix** matrices, matrix* mtx);
 void printMatrix(matrix* mtx);
-void matrixMultiplicationStandard(matrix* p, matrix* m1, matrix* m2);
 
 
 // Generates a random r by c matrix with entries 0, 1, or -1
@@ -45,8 +48,12 @@ matrix* generateRandomMatrix(int r, int c) {
 // Creates a matrix with r rows and c columns
 matrix* createMatrix(int r, int c) {
 	matrix* mtx = malloc(sizeof(matrix));
-	mtx->rows = r;
-	mtx->cols = c;
+	mtx->startRow = 0;
+	mtx->startCol = 0;
+	mtx->endRow = r;
+	mtx->endCol = c;
+	mtx->totalRow = r;
+	mtx->totalCol = c;
 	mtx->m = calloc(r * c, sizeof(int));
 	return mtx;
 }
@@ -59,44 +66,76 @@ void freeMatrix(matrix* mtx) {
 
 // Gets the element from matrix mtx at row i and column j
 int getElement(matrix* mtx, int i, int j) {
-	assert (i < mtx->rows && "index out of bounds");
-	assert (j < mtx->cols && "index out of bounds");
-	return mtx->m[i * mtx->cols + j];
+	checkElement(mtx, i, j);
+	return mtx->m[(i + mtx->startRow) * mtx->totalCol + j + mtx->startCol];
 }
 
 // Sets the element in matrix mtx at row i and column j to e
 void setElement(matrix* mtx, int i, int j, int e) {
-	assert (i < mtx->rows && "index out of bounds");
-	assert (j < mtx->cols && "index out of bounds");
-	mtx->m[i * mtx->cols + j] = e;
+	checkElement(mtx, i, j);
+	mtx->m[(i + mtx->startRow) * mtx->totalCol + j + mtx->startCol] = e;
 }
+
+// Basic checks regarding get/set elements
+void checkElement(matrix* mtx, int i, int j) {
+	assert (i < mtx->endRow - mtx->startRow && i >= 0 && "index out of bounds");
+	assert (j < mtx->endCol - mtx->startCol && j >= 0 && "index out of bounds");
+}
+
+// Gets number of rows in matrix
+int getRows(matrix* mtx) {
+	return mtx->endRow - mtx->startRow;
+}
+
+// Gets number of columns in matrix
+int getCols(matrix* mtx) {
+	return mtx->endCol - mtx->startCol;
+}
+
+// Splits current matrix (mtx) of side length n into four submatrices of side length n / 2
+// Stores result in matrix* array matrices
+//		 	|  A   B  |
+//	M -->	|		  |
+//			|  C   D  |
+void splitMatrix(matrix** matrices, matrix* mtx) {
+	for (int i = 0; i < 4; i++) {
+		matrices[i] = malloc(sizeof(matrix));
+
+		// Total rows and array stay the same
+		matrices[i]->m = mtx->m;
+		matrices[i]->totalRow = mtx->totalRow;
+		matrices[i]->totalCol = mtx->totalCol;
+		
+		// First two take upper half; second two take lower half
+		if (i / 2 == 0) {
+			matrices[i]->startRow = mtx->startRow;
+			matrices[i]->endRow = mtx->startRow + (getRows(mtx)) / 2;
+		} else {
+			matrices[i]->startRow = mtx->startRow + (getRows(mtx)) / 2;
+			matrices[i]->endRow = mtx->endRow;
+		}
+
+		// Evens take left half; odds take right half
+		if (i % 2 == 0) {
+			matrices[i]->startCol = mtx->startCol;
+			matrices[i]->endCol = mtx->startCol + (getCols(mtx)) / 2;
+		} else {
+			matrices[i]->startCol = mtx->startCol + (getCols(mtx)) / 2;
+			matrices[i]->endCol = mtx->endCol;
+		}
+	}
+}
+
 
 // Pretty prints matrix to console
 void printMatrix(matrix* mtx) {
-	for (int i = 0; i < mtx->rows; i++) {
-		for (int j = 0; j < mtx->cols; j++) {
+	for (int i = 0; i < mtx->endRow - mtx->startRow; i++) {
+		for (int j = 0; j < mtx->endCol - mtx->startCol; j++) {
 			printf("%3i", getElement(mtx, i, j));
 		}
 		printf("\n");
 	}
 	printf("\n");
 }
-
-// Multiplies two matrices (m1 x m2) using standard matrix multiplication
-// Puts result in matrix p
-// NOTE: unexpected results may occur if p points to same matrix as m1, m2
-void matrixMultiplicationStandard(matrix* p, matrix* m1, matrix* m2) {
-	assert (m1->cols == m2->rows && "Matrix dimensions do not match!");
-	for (int i = 0; i < m1->rows; i++) {
-		for (int j = 0; j < m1->cols; j++) {
-			for (int k = 0; k < m2->cols; k++) {
-				setElement(p, i, k, getElement(p, i, k) + getElement(m1, i, j) * getElement(m2, j, k));
-			}
-		}
-	}
-}
-
-
-
 
 

@@ -9,13 +9,15 @@
  *
  */
 
- typedef struct matrix {
- 	int startRow;
- 	int startCol;
- 	int rows;
- 	int cols;
- 	int* m;
- } matrix; 
+typedef struct matrix {
+ 	int startRow;		// Start row in matrix
+ 	int startCol;		// Start column in matrix
+ 	int endRow;			// End row in matrix
+ 	int endCol;			// End column in matrix
+ 	int totalRow;		// Total number of rows in array
+ 	int totalCol;		// Total number of columns in array
+ 	int* m;				// 2D array of numbers
+} matrix; 
 
 // Generates a random r by c matrix with entries 0, 1, or -1
 matrix* generateRandomMatrix(int r, int c);
@@ -32,13 +34,18 @@ int getElement(matrix* mtx, int i, int j);
 // Sets the element in matrix mtx at row i and column j to e
 void setElement(matrix* mtx, int i, int j, int e);
 
+// Gets number of rows in matrix
+int getRows(matrix* mtx);
+
+// Gets number of columns in matrix
+int getCols(matrix* mtx);
+
+// Splits current matrix (mtx) of side length n into four submatrices of side length n / 2
+// Stores result in matrix* array matrices
+//		 	|  A   B  |
+//	M -->	|		  |
+//			|  C   D  |
+void splitMatrix(matrix** matrices, matrix* mtx);
+
 // Pretty prints matrix to console
 void printMatrix(matrix* mtx);
-
-// Multiplies two matrices (m1 x m2) using standard matrix multiplication
-// Puts result in matrix p
-// NOTE: unexpected results may occur if p points to same matrix as m1, m2
-void matrixMultiplicationStandard(matrix* p, matrix* m1, matrix* m2);
-
-
-
