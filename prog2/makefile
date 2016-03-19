@@ -3,8 +3,11 @@ CFLAGS=-c -Wall -g
 
 all: strassen
 
-strassen: matrix.o main.o
-	$(CC) matrix.o main.o -o strassen
+strassen: matrix.o main.o matrixMultiplication.o
+	$(CC) matrix.o main.o matrixMultiplication.o -o strassen
+
+matrixMultiplication.o: matrixMultiplication.c
+	$(CC) $(CFLAGS) matrixMultiplication.c
 
 matrix.o: matrix.c
 	$(CC) $(CFLAGS) matrix.c
