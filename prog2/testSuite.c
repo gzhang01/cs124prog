@@ -82,9 +82,51 @@ void testAdd(void) {
 	freeMatrix(s2);
 }
 
+void testMultStan(void) {
+	// Initialize matrices
+	matrix* m1 = createMatrix(2);
+	matrix* m2 = createMatrix(2);
+	matrix* p1 = createMatrix(2);
+
+	// Create matrices:
+	//		|	2	4	|			|	1	-1	|
+	// m1 = |			| 	   m2 = |			|
+	//		|	1	3	|			|	-2	0	|
+	setElement(m1, 0, 0, 2);
+	setElement(m1, 0, 1, 4);
+	setElement(m1, 1, 0, 1);
+	setElement(m1, 1, 1, 3);
+	setElement(m2, 0, 0, 1);
+	setElement(m2, 0, 1, -1);
+	setElement(m2, 1, 0, -2);
+	setElement(m2, 1, 1, 0);
+
+	// Test matrix multiplication
+	matrixMultiplicationStandard(p1, m1, m2);
+	assert(getElement(p1, 0, 0) == -6);
+	assert(getElement(p1, 0, 1) == -2);
+	assert(getElement(p1, 1, 0) == -5);
+	assert(getElement(p1, 1, 1) == -1);
+
+	// Test with submatrix
+	m1->startRow = 1; m1->dim = 1;
+	m2->startCol = 1; m2->dim = 1;
+	matrix* p2 = createMatrix(1);
+	matrixMultiplicationStandard(p2, m1, m2);
+	assert(getElement(p2, 0, 0) == -1);
+	m1->startRow = 0; m1->dim = 2;
+	m2->startCol = 0; m2->dim = 2;
+
+	freeMatrix(m1);
+	freeMatrix(m2);
+	freeMatrix(p1);
+	freeMatrix(p2);
+}
+
 int main(void) {
 	testBasics();
 	testAdd();
+	testMultStan();
 }
 
 

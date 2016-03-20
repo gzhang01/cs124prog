@@ -160,7 +160,6 @@ void matrixAddAsserts(matrix* s, matrix* m1, matrix* m2) {
 	assert (getCols(m1) == getCols(s) && "Dimensions for matrix addition do not match!");
 }
 
-
 // Pretty prints matrix to console
 void printMatrix(matrix* mtx) {
 	for (int i = 0; i < getRows(mtx); i++) {

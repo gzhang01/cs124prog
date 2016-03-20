@@ -19,4 +19,4 @@ void matrixMultiplicationStandard(matrix* p, matrix* m1, matrix* m2);
 // Puts result in matrix p
 // NOTE: unexpected results will occur if p points to same matrix as m1, m2
 // NOTE: currently works for powers of 2
-void matrixMultiplicationStrassen(matrix* p, matrix* m1, matrix* m2);
+void matrixMultiplicationStrassen(matrix* p, matrix* m1, matrix* m2, int t);
