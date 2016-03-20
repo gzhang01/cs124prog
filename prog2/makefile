@@ -3,11 +3,23 @@ CFLAGS=-c -Wall -g
 
 all: strassen
 
-strassen: prog2trace.o
-	$(CC) prog2trace.o -o strassen
+strassen: main.o matrix.o matrixMultiplication.o
+	$(CC) main.o matrix.o matrixMultiplication.o -o strassen
 
-prog2trace.o: prog2trace.c
-	$(CC) $(CFLAGS) prog2trace.c
+test: testSuite.o matrix.o matrixMultiplication.o
+	$(CC) testSuite.o matrix.o matrixMultiplication.o -o test
+
+matrixMultiplication.o: matrixMultiplication.c
+	$(CC) $(CFLAGS) matrixMultiplication.c
+
+matrix.o: matrix.c
+	$(CC) $(CFLAGS) matrix.c
+
+main.o: main.c
+	$(CC) $(CFLAGS) main.c
+
+testSuite.o: testSuite.c
+	$(CC) $(CFLAGS) testSuite.c
 
 clean:
 	rm *.o strassen
