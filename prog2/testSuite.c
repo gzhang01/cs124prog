@@ -123,10 +123,33 @@ void testMultStan(void) {
 	freeMatrix(p2);
 }
 
+void testMultStrassen() {
+	matrix* m1 = generateRandomMatrix(8);
+	matrix* m2 = generateRandomMatrix(8);
+	matrix* p1 = createMatrix(8);
+	matrix* p2 = createMatrix(8);
+
+	matrixMultiplicationStandard(p1, m1, m2);
+	matrixMult(p2, m1, m2, 1);
+
+	for (int i = 0; i < getRows(m1); i++) {
+		for (int j = 0; j < getCols(m2); j++) {
+			assert(getElement(p1, i, j) == getElement(p2, i, j));
+		}
+	}
+
+	freeMatrix(m1);
+	freeMatrix(m2);
+	freeMatrix(p1);
+	freeMatrix(p2);
+
+}
+
 int main(void) {
 	testBasics();
 	testAdd();
 	testMultStan();
+	testMultStrassen();
 }
 
 
