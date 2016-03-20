@@ -4,6 +4,7 @@
  *	Basic testSuite for matrix calculations
  *
  *	@author: George Zhang
+ *  @author: Daniel Chen
  *	Harvard University
  * 	CS124 - Prog 2
  *
@@ -128,13 +129,16 @@ void testMultStrassen() {
 	matrix* m2 = generateRandomMatrix(8);
 	matrix* p1 = createMatrix(8);
 	matrix* p2 = createMatrix(8);
+	matrix* p3 = createMatrix(8);
 
 	matrixMultiplicationStandard(p1, m1, m2);
 	matrixMult(p2, m1, m2, 1);
+	matrixMult(p3, m1, m2, 2);
 
 	for (int i = 0; i < getRows(m1); i++) {
 		for (int j = 0; j < getCols(m2); j++) {
 			assert(getElement(p1, i, j) == getElement(p2, i, j));
+			assert(getElement(p1, i, j) == getElement(p3, i, j));
 		}
 	}
 
@@ -142,7 +146,7 @@ void testMultStrassen() {
 	freeMatrix(m2);
 	freeMatrix(p1);
 	freeMatrix(p2);
-
+	freeMatrix(p3);
 }
 
 int main(void) {
