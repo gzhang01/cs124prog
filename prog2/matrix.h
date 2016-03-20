@@ -4,6 +4,7 @@
  *	Implements basic operations with square matrices
  *
  *	@author: George Zhang
+ *  @author: Daniel Chen
  *	Harvard University
  * 	CS124 - Prog 2
  *
