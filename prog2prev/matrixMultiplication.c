@@ -28,6 +28,7 @@ void matrixMultiplicationAsserts(matrix* p, matrix* m1, matrix* m2);
 // Puts result in matrix p
 // NOTE: unexpected results will occur if p points to same matrix as m1, m2
 void matrixMultiplicationStandard(matrix* p, matrix* m1, matrix* m2) {
+	printf("Starting Standard\n");
 	// Check dimensions of given matrices
 	matrixMultiplicationAsserts(p, m1, m2);
 
@@ -46,9 +47,15 @@ void matrixMultiplicationStandard(matrix* p, matrix* m1, matrix* m2) {
 // NOTE: unexpected results will occur if p points to same matrix as m1, m2
 // NOTE: currently works for powers of 2
 void matrixMultiplicationStrassen(matrix* p, matrix* m1, matrix* m2) {
+	printf("Starting Strassen\n");
+
 	matrixMultiplicationAsserts(p, m1, m2);
 
 	// If one dimension reaches threshold, use traditional
+	if (getRows(m1) <= 1 || getCols(m1) <= 1 || getCols(m2) <= 1) {
+		matrixMultiplicationStandard(p, m1, m2);
+		return;
+	}
 
 	// Getting split matrices
 	matrix* matrices1[NUMSPLIT];
@@ -64,6 +71,11 @@ void matrixMultiplicationStrassen(matrix* p, matrix* m1, matrix* m2) {
 	for (int i = 0; i < NUMSPLIT; i++) {
 		printMatrix(matrices2[i]);
 	}
+
+	freeSplitMatrices(matrices1);
+	freeSplitMatrices(matrices2);
+
+
 
 }
 
