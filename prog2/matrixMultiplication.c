@@ -17,6 +17,8 @@
 #include "matrixMultiplication.h"
 
 #define NUMSPLIT 4
+#define SUB -1
+#define ADD 1
 
 void matrixMult(matrix* p, matrix* m1, matrix* m2, int t);
 void matrixMultiplicationStandard(matrix* p, matrix* m1, matrix* m2);
@@ -42,15 +44,42 @@ void matrixMult(matrix* p, matrix* m1, matrix* m2, int t) {
 	splitMatrix(matrices1, m1);
 	splitMatrix(matrices2, m2);
 
-	printMatrix(m1);
-	for (int i = 0; i < NUMSPLIT; i++) {
-		printMatrix(matrices1[i]);
+	// Pieces for Strassen's (index 0 left blank) and temporary matrices from addition
+	matrix* pt[8];
+	for (int i = 1; i < 8; i++) {
+		pt[i] = createMatrix(getRows(p) / 2);
 	}
-	printMatrix(m2);
-	for (int i = 0; i < NUMSPLIT; i++) {
-		printMatrix(matrices2[i]);
-	}
+	matrix* tmp1 = createMatrix(getRows(p) / 2);
+	matrix* tmp2 = createMatrix(getRows(p) / 2);
 
+	// Calculating pieces
+	matrixMult(pt[1], matrices1[0], matrixAdd(tmp1, matrices2[1], matrices2[3], SUB), t);
+	matrixMult(pt[2], matrixAdd(tmp1, matrices1[0], matrices1[1], ADD), matrices2[3], t);
+	matrixMult(pt[3], matrixAdd(tmp1, matrices1[2], matrices1[3], ADD), matrices2[0], t);
+	matrixMult(pt[4], matrices1[3], matrixAdd(tmp1, matrices2[2], matrices2[0], SUB), t);
+	matrixMult(pt[5], matrixAdd(tmp1, matrices1[0], matrices1[3], ADD), matrixAdd(tmp2, matrices2[0], matrices2[3], ADD), t);
+	matrixMult(pt[6], matrixAdd(tmp1, matrices1[1], matrices1[3], SUB), matrixAdd(tmp2, matrices2[2], matrices2[3], ADD), t);
+	matrixMult(pt[7], matrixAdd(tmp1, matrices1[0], matrices1[2], SUB), matrixAdd(tmp2, matrices2[0], matrices2[1], ADD), t);
+
+	// Calculating final product
+	// Manipulates dimensions and start to fill in quadrants
+	p->dim = getRows(p) / 2;
+	matrixAdd(p, pt[5], matrixAdd(tmp1, pt[4], matrixAdd(tmp2, pt[6], pt[2], SUB), ADD), ADD);
+	p->startCol = p->dim;
+	matrixAdd(p, pt[1], pt[2], ADD);
+	p->startRow = p->dim;
+	matrixAdd(p, pt[5], matrixAdd(tmp1, pt[1], matrixAdd(tmp2, pt[3], pt[7], ADD), SUB), ADD);
+	p->startCol = 0;
+	matrixAdd(p, pt[3], pt[4], ADD);
+	p->startRow = 0;
+	p->dim = getRows(p) * 2;
+
+	// Freeing everything allocated
+	freeMatrix(tmp1);
+	freeMatrix(tmp2);
+	for (int i = 1; i < 8; i++) {
+		freeMatrix(pt[i]);
+	}
 	freeSplitMatrices(matrices1);
 	freeSplitMatrices(matrices2);
 }
