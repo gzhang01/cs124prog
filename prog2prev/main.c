@@ -39,12 +39,10 @@ int main(void) {
 
 
 	// Testing splitting matrices
-	int row = 3;
-	int mid = 1;
-	int col = 3;
-	matrix* m1 = generateRandomMatrix(row, mid);
-	matrix* m2 = generateRandomMatrix(mid, col);
-	matrix* p = createMatrix(row, col);
+	int dim = 2;
+	matrix* m1 = generateRandomMatrix(dim);
+	matrix* m2 = generateRandomMatrix(dim);
+	matrix* p = createMatrix(dim);
 	matrixMultiplicationStrassen(p, m1, m2);
 	printMatrix(m1);
 	printMatrix(m2);

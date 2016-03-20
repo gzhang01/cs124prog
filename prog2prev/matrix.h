@@ -1,7 +1,7 @@
 /**
  *	matrix.h
  *	
- *	Implements basic operations with matrices
+ *	Implements basic operations with square matrices
  *
  *	@author: George Zhang
  *	Harvard University
@@ -12,18 +12,15 @@
 typedef struct matrix {
  	int startRow;		// Start row in matrix
  	int startCol;		// Start column in matrix
- 	int endRow;			// End row in matrix
- 	int endCol;			// End column in matrix
- 	int totalRow;		// Total number of rows in array
- 	int totalCol;		// Total number of columns in array
- 	int* m;				// 2D array of numbers
+ 	int dim;			// Dimension of square matrix
+ 	int** m;			// 2D array of numbers
 } matrix; 
 
 // Generates a random r by c matrix with entries 0, 1, or -1
-matrix* generateRandomMatrix(int r, int c);
+matrix* generateRandomMatrix(int d);
 
 // Creates a matrix with r rows and c columns
-matrix* createMatrix(int r, int c);
+matrix* createMatrix(int d);
 
 // Frees matrix mtx
 void freeMatrix(matrix* mtx);
@@ -50,11 +47,9 @@ void splitMatrix(matrix** matrices, matrix* mtx);
 // Frees matrices allocated during split
 void freeSplitMatrices(matrix** matrices);
 
-// Adds two matrices (m1 + m2) and stores result in 
-void matrixAdd(matrix* s, matrix* m1, matrix* m2);
-
-// Subtracts two matrices (m1 - m2) and stores result in s
-void matrixSubtract(matrix* s, matrix* m1, matrix* m2);
+// Adds two matrices (m1 + m2) and stores result in s
+// Input f = 1 for addition, -1 for subtraction
+void matrixAdd(matrix* s, matrix* m1, matrix* m2, int f);
 
 // Pretty prints matrix to console
 void printMatrix(matrix* mtx);
