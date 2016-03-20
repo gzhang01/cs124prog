@@ -22,4 +22,4 @@ testSuite.o: testSuite.c
 	$(CC) $(CFLAGS) testSuite.c
 
 clean:
-	rm *.o strassen
+	rm *.o strassen test
