@@ -49,7 +49,8 @@ void freeSplitMatrices(matrix** matrices);
 
 // Adds two matrices (m1 + m2) and stores result in s
 // Input f = 1 for addition, -1 for subtraction
-void matrixAdd(matrix* s, matrix* m1, matrix* m2, int f);
+// Returns address of s
+matrix* matrixAdd(matrix* s, matrix* m1, matrix* m2, int f);
 
 // Pretty prints matrix to console
 void printMatrix(matrix* mtx);

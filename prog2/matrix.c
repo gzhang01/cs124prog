@@ -27,7 +27,7 @@ int getRows(matrix* mtx);
 int getCols(matrix* mtx);
 void splitMatrix(matrix** matrices, matrix* mtx);
 void freeSplitMatrices(matrix** matrices);
-void matrixAdd(matrix* s, matrix* m1, matrix* m2, int f);
+matrix* matrixAdd(matrix* s, matrix* m1, matrix* m2, int f);
 void matrixAddAsserts(matrix* s, matrix* m1, matrix* m2);
 void printMatrix(matrix* mtx);
 
@@ -140,7 +140,8 @@ void freeSplitMatrices(matrix** matrices) {
 
 // Adds two matrices (m1 + m2) and stores result in s
 // Input f = 1 for addition, -1 for subtraction
-void matrixAdd(matrix* s, matrix* m1, matrix* m2, int f) {
+// Return address of s
+matrix* matrixAdd(matrix* s, matrix* m1, matrix* m2, int f) {
 	// Matrix addition checks
 	matrixAddAsserts(s, m1, m2);
 
@@ -150,6 +151,8 @@ void matrixAdd(matrix* s, matrix* m1, matrix* m2, int f) {
 			setElement(s, i, j, getElement(m1, i, j) + f * getElement(m2, i, j));
 		}
 	}
+
+	return s;
 }
 
 // Sanity checks for matrix addition
