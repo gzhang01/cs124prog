@@ -1,24 +1,15 @@
 import matplotlib.pyplot as plt
 import csv
 
-dim = 1000
+dim = 800
 
-filename = "T005-195/d%i.csv" % (dim)
+filename = "d%i.csv" % (dim)
 
 f = open(filename)
 csv_f = csv.reader(f)
 
 threshold = []
 runtime = []
-
-for row in csv_f:
-	threshold.append(row[0])
-	runtime.append(row[1])
-
-filename = "T190-400/d%i.csv" % (dim)
-
-f = open(filename)
-csv_f = csv.reader(f)
 
 for row in csv_f:
 	threshold.append(row[0])
