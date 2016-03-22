@@ -109,7 +109,7 @@ int main(int argc, char* argv[]) {
 	} else if (flag == 4) {
 		// Flag 4 generates data
 		// Run with different dimensions
-		for (int dim = 100; dim < 200; dim += 100) {
+		for (int dim = 100; dim < 300; dim += 100) {
 			// Get appropriate file
 			// NOTE: must generate appropriate file first ("./gen dim" in terminal)
 			char filename[20];
@@ -127,7 +127,7 @@ int main(int argc, char* argv[]) {
 				// Run for variable number of times
 				// TODO: implement arrays of numbers to test with number times to run
 				// 5 trials each for now
-				for (int run = 0; run < 1; run++, trials++) {
+				for (int run = 0; run < 5; run++, trials++) {
 					runTime += runProg(t, dim, pad, flag, filename);
 				}
 
