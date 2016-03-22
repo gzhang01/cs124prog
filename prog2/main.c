@@ -109,14 +109,21 @@ int main(int argc, char* argv[]) {
 	} else if (flag == 4) {
 		// Flag 4 generates data
 		// Run with different dimensions
-		for (int dim = 100; dim < 300; dim += 100) {
+		for (int dim = 512; dim <= 512; dim *= 2) {
 			// Get appropriate file
 			// NOTE: must generate appropriate file first ("./gen dim" in terminal)
 			char filename[20];
 			sprintf(filename, "testfiles/t%d.txt", dim);
 
+			// Location to place data
+			char outfile[15];
+			sprintf(outfile, "data/d%d.csv", dim);
+			// Clear previous data
+			FILE* f = fopen(outfile, "w");
+			fclose(f);
+
 			// Run for several thresholds
-			for (int t = 5; t < 50; t += 10) {
+			for (int t = 20; t < 200; t += 2) {
 				// Keep track of total running time
 				int runTime = 0;
 				int trials = 0;
@@ -127,13 +134,11 @@ int main(int argc, char* argv[]) {
 				// Run for variable number of times
 				// TODO: implement arrays of numbers to test with number times to run
 				// 5 trials each for now
-				for (int run = 0; run < 5; run++, trials++) {
+				for (int run = 0; run < 1; run++, trials++) {
 					runTime += runProg(t, dim, pad, flag, filename);
 				}
 
 				// Adding datapoint to file
-				char outfile[15];
-				sprintf(outfile, "data/d%d.csv", dim);
 				FILE* f = fopen(outfile, "a");
 				fprintf(f, "%i,%.3f\n", t, 1.0 * runTime / trials);
 				fclose(f);
