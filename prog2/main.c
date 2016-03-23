@@ -151,7 +151,7 @@ int main(int argc, char* argv[]) {
 		char* infile = "testfiles/t2048.txt";
 		char* outfile = "data/methodCompare.csv";
 
-		for (int dim = 800; dim <= 1000; dim += 200) {
+		for (int dim = 200; dim <= 200; dim += 200) {
 			int runTime[] = {0, 0, 0};
 			int trials = 0;
 			pad = getPad(dim, t, flag);
@@ -161,7 +161,7 @@ int main(int argc, char* argv[]) {
 				// Standard uses threshold = dim; no padding needed
 				runTime[0] += runProg(dim, dim, dim, flag, infile);
 				// Pure Strassen's uses threshold 1
-				// runTime[1] += runProg(1, dim, getPad(dim, 1, flag), flag, infile);
+				runTime[1] += runProg(1, dim, getPad(dim, 1, flag), flag, infile);
 				// Modified Strassen's
 				runTime[2] += runProg(t, dim, pad, flag, infile);
 			}
