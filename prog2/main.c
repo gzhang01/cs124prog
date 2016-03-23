@@ -22,10 +22,11 @@
 // 	2: Test with semioptimized padding
 // 	3: Test with optimized padding **** Not Implemented ****
 // 	4: Generate data with semioptimized padding
+//	5: Collect data on run times of three algorithms
 int getPad(int dim, int threshold, int flag) {
 	if (flag == 0 || flag == 1) {
 		return dim;
-	} else if (flag == 2 || flag == 4) {
+	} else if (flag == 2 || flag == 4 || flag == 5) {
 		int tempdim = dim;
 		while (tempdim > threshold) {
 			tempdim = (tempdim + 1) / 2;
@@ -98,7 +99,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	// Threshold
-	int t = 200;
+	int t = 40;
 
 	// Get dimensions, flag, padding
 	int dim = (int) strtol(argv[2], NULL, 10);
@@ -145,6 +146,31 @@ int main(int argc, char* argv[]) {
 				fclose(f);
 			}
 		}	
+	} else if (flag == 5) {
+		// Run standard, Strassen's, and modified Strassen's
+		char* infile = "testfiles/t2048.txt";
+		char* outfile = "data/methodCompare.csv";
+
+		for (int dim = 800; dim <= 1000; dim += 200) {
+			int runTime[] = {0, 0, 0};
+			int trials = 0;
+			pad = getPad(dim, t, flag);
+
+
+			for (int run = 0; run < 1; run++, trials++) {
+				// Standard uses threshold = dim; no padding needed
+				runTime[0] += runProg(dim, dim, dim, flag, infile);
+				// Pure Strassen's uses threshold 1
+				// runTime[1] += runProg(1, dim, getPad(dim, 1, flag), flag, infile);
+				// Modified Strassen's
+				runTime[2] += runProg(t, dim, pad, flag, infile);
+			}
+
+			// Adding datapoint to file
+			FILE* f = fopen(outfile, "a");
+			fprintf(f, "%i,%.3f,%.3f,%.3f\n", t, 1.0 * runTime[0] / trials, 1.0 * runTime[1] / trials, 1.0 * runTime[2] / trials);
+			fclose(f);
+		}
 	} else {
 		printf("Incorrect flag used\n");
 		return 2;
