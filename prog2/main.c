@@ -74,6 +74,7 @@ int runProg(int t, int dim, int pad, int flag, char* filename) {
 		for (int i = 0; i < dim; i++) {
 			printf("%i\n", getElement(p, i, i));
 		}
+		printf("\n");
 	} else {
 		printf("Total time for threshold %i, dim %i: %ld\n", t, dim, end - start);
 	}
@@ -123,7 +124,7 @@ int main(int argc, char* argv[]) {
 			fclose(f);
 
 			// Run for several thresholds
-			for (int t = 20; t < 200; t += 2) {
+			for (int t = 20; t < 150; t += 5) {
 				// Keep track of total running time
 				int runTime = 0;
 				int trials = 0;
@@ -134,7 +135,7 @@ int main(int argc, char* argv[]) {
 				// Run for variable number of times
 				// TODO: implement arrays of numbers to test with number times to run
 				// 5 trials each for now
-				for (int run = 0; run < 1; run++, trials++) {
+				for (int run = 0; run < 10; run++, trials++) {
 					runTime += runProg(t, dim, pad, flag, filename);
 				}
 
