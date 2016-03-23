@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import csv
 
-dim = 1000
+dim = 600
 
 filename = "T005-195/d%i.csv" % (dim)
 
@@ -31,7 +31,7 @@ plt.plot(threshold, runtime)
 
 
 # plt.legend(loc='right')
-# plt.ylim((0,.20))
+plt.ylim((9,17))
 # plt.xlim((0,12))
 plt.xlabel('Threshold')
 plt.ylabel('Runtime')
