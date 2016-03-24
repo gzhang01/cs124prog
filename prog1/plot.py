@@ -39,7 +39,7 @@ def threshold(ns, d):
     # return output
 
 for d in xrange(5):
-	# if d in [1, 0, 2, 4,]:
+	# if d in [1, 0, 3, 4,]:
 	if d in [1]:
 		continue
 
@@ -131,6 +131,7 @@ for d in xrange(5):
 	plt.plot(second_s, threshold(second_s, d))
 	plt.scatter(second[0], second[1])
 	plt.show()
+
 
 	plt.plot(third_s, threshold(third_s, d))
 	plt.scatter(third[0], third[1])
