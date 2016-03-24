@@ -22,22 +22,22 @@
 // 	2: Test with semioptimized padding
 // 	3: Test with optimized padding **** Not Implemented ****
 // 	4: Generate data with semioptimized padding
-int getPad(int dim, int threshold, int flag) {
-	if (flag == 0 || flag == 1) {
-		return dim;
-	} else if (flag == 2 || flag == 4) {
-		int tempdim = dim;
-		while (tempdim > threshold) {
-			tempdim = (tempdim + 1) / 2;
-		}
-		while (tempdim < dim) {
-			tempdim = tempdim * 2;
-		}
-		return tempdim;
-	}
+// int getPad(int dim, int threshold, int flag) {
+// 	if (flag == 0 || flag == 1) {
+// 		return dim;
+// 	} else if (flag == 2 || flag == 4) {
+// 		int tempdim = dim;
+// 		while (tempdim > threshold) {
+// 			tempdim = (tempdim + 1) / 2;
+// 		}
+// 		while (tempdim < dim) {
+// 			tempdim = tempdim * 2;
+// 		}
+// 		return tempdim;
+// 	}
 
-	return -1;
-}
+// 	return -1;
+// }
 
 // Run program given threshold t, dimension dim, total size of matrix pad, and flag
 // Returns time taken to run
@@ -74,6 +74,7 @@ int runProg(int t, int dim, int pad, int flag, char* filename) {
 		for (int i = 0; i < dim; i++) {
 			printf("%i\n", getElement(p, i, i));
 		}
+		printf("\n");
 	} else {
 		printf("Total time for threshold %i, dim %i: %ld\n", t, dim, end - start);
 	}
@@ -97,12 +98,13 @@ int main(int argc, char* argv[]) {
 	}
 
 	// Threshold
-	int t = 200;
+	int t = 5;
 
 	// Get dimensions, flag, padding
 	int dim = (int) strtol(argv[2], NULL, 10);
 	int flag = (int) strtol(argv[1], NULL, 10);
-	int pad = getPad(dim, t, flag);
+	// int pad = getPad(dim, t, flag);
+	int pad = dim;
 
 	if (flag == 0 || flag == 1 || flag == 2 || flag == 3) {
 		runProg(t, dim, pad, flag, argv[3]);
@@ -123,18 +125,19 @@ int main(int argc, char* argv[]) {
 			fclose(f);
 
 			// Run for several thresholds
-			for (int t = 20; t < 200; t += 2) {
+			for (int t = 20; t < 150; t += 5) {
 				// Keep track of total running time
 				int runTime = 0;
 				int trials = 0;
 				
 				// Get padding
-				pad = getPad(dim, t, flag);
+				// pad = getPad(dim, t, flag);
+				pad = dim;
 
 				// Run for variable number of times
 				// TODO: implement arrays of numbers to test with number times to run
 				// 5 trials each for now
-				for (int run = 0; run < 1; run++, trials++) {
+				for (int run = 0; run < 10; run++, trials++) {
 					runTime += runProg(t, dim, pad, flag, filename);
 				}
 

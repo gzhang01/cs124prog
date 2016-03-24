@@ -26,6 +26,8 @@ void setElement(matrix* mtx, int i, int j, int e);
 void checkElement(matrix* mtx, int i, int j);
 int getRows(matrix* mtx);
 int getCols(matrix* mtx);
+int getPadRows(matrix* mtx);
+int getPadCols(matrix* mtx);
 void splitMatrix(matrix** matrices, matrix* mtx);
 void freeSplitMatrices(matrix** matrices);
 matrix* matrixAdd(matrix* s, matrix* m1, matrix* m2, int f);
@@ -56,6 +58,8 @@ matrix* createMatrix(int d) {
 	matrix* mtx = malloc(sizeof(matrix));
 	mtx->startRow = 0;
 	mtx->startCol = 0;
+	mtx->padr = 0;
+	mtx->padc = 0;
 	mtx->dim = d;
 	mtx->m = malloc(sizeof(int*) * d);
 	for (int i = 0; i < d; i++) {
@@ -76,13 +80,21 @@ void freeMatrix(matrix* mtx) {
 // Gets the element from matrix mtx at row i and column j
 int getElement(matrix* mtx, int i, int j) {
 	checkElement(mtx, i, j);
-	return mtx->m[mtx->startRow + i][mtx->startCol + j];
+	if ((i >= (getRows(mtx) - getPadRows(mtx))) || (j >= (getCols(mtx) - getPadCols(mtx)))) {
+		return 0;
+	} else {
+		return mtx->m[mtx->startRow + i][mtx->startCol + j];
+	}
 }
 
 // Sets the element in matrix mtx at row i and column j to e
 void setElement(matrix* mtx, int i, int j, int e) {
 	checkElement(mtx, i, j);
-	mtx->m[mtx->startRow + i][mtx->startCol + j] = e;
+	if ((i >= (getRows(mtx) - getPadRows(mtx))) || (j >= (getCols(mtx) - getPadCols(mtx)))) {
+	} else {
+		mtx->m[mtx->startRow + i][mtx->startCol + j] = e;
+	}
+	
 }
 
 // Basic checks regarding get/set elements
@@ -101,6 +113,14 @@ int getCols(matrix* mtx) {
 	return mtx->dim;
 }
 
+int getPadRows(matrix* mtx) {
+	return mtx->padr;
+}
+
+int getPadCols(matrix* mtx) {
+	return mtx->padc;
+}
+
 // Splits current matrix (mtx) of side length n into four submatrices of side length n / 2
 // Stores result in matrix* array matrices
 //		 	|  A   B  |
@@ -113,21 +133,34 @@ void splitMatrix(matrix** matrices, matrix* mtx) {
 		// Array stays the same
 		matrices[i]->m = mtx->m;
 		
+		// Determine if padding is necessary
+		if (mtx->dim % 2 == 1) {
+			matrices[1]->padc = mtx->padc + 1;
+			matrices[2]->padr = mtx->padr + 1;
+			matrices[3]->padc = mtx->padc + 1;
+			matrices[3]->padr = mtx->padr + 1;
+		} else {
+			matrices[1]->padc = mtx->padc;
+			matrices[2]->padr = mtx->padr;
+			matrices[3]->padc = mtx->padc;
+			matrices[3]->padr = mtx->padr;
+		}
+
 		// Dimension halved
-		matrices[i]->dim = mtx->dim / 2;
+		matrices[i]->dim = (mtx->dim + 1) / 2; // Take ceiling
 		
 		// First two take upper half; second two take lower half
 		if (i / 2 == 0) {
 			matrices[i]->startRow = mtx->startRow;
 		} else {
-			matrices[i]->startRow = mtx->startRow + getRows(mtx) / 2;
+			matrices[i]->startRow = mtx->startRow + (getRows(mtx) + 1) / 2;
 		}
 
 		// Evens take left half; odds take right half
 		if (i % 2 == 0) {
 			matrices[i]->startCol = mtx->startCol;
 		} else {
-			matrices[i]->startCol = mtx->startCol + getCols(mtx) / 2;
+			matrices[i]->startCol = mtx->startCol + (getCols(mtx) + 1) / 2;
 		}
 	}
 }
@@ -155,6 +188,8 @@ matrix* matrixAdd(matrix* s, matrix* m1, matrix* m2, int f) {
 
 	return s;
 }
+
+
 
 // Sanity checks for matrix addition
 void matrixAddAsserts(matrix* s, matrix* m1, matrix* m2) {
