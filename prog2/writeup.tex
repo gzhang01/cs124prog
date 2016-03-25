@@ -64,39 +64,61 @@ $$f(1) = 1$$
 For conventional matrix multiplication, where we compute the dot product of rows and columns, we have a total of $n^3$ multiplications and $n^2(n - 1)$ additions. As a result, the run time for this algorithm can be expressed in closed form easily:
 $$s(n) = n^2(2n-1)$$
 
-Our modified algorithm will combine these two procedures. We know that if $n > n_0$, then we perform Strassen's. If $n < n_0$, we have reached our base case and we perform standard matrix multiplication. Thus our recurrence equation is:
-$$f(n) = 7f\left(\frac{n}{2}\right)+18\left(\frac{n}{2}\right)^2, n > n_0$$
-$$f(n) = s(n), n \le n_0$$
+Our modified algorithm will combine these two procedures. We know that there is a threshold where conventional multiplication becomes cheaper than Strassen's. We call this threshold $n_0$. For $n > n_0$, we perform Strassen's. If $n < n_0$, we have reached our base case and we perform standard matrix multiplication. Thus our recurrence equation is:
+$$f(n) = 7\min{\left[f\left(\frac{n}{2}\right),s\left(\frac{n}{2}\right)\right]}+18\left(\frac{n}{2}\right)^2$$
 
-This recurrence is difficult to solve. Let us simply solve it numerically by looking at $f(n)$ for various values of $n$ and $n_0$:
+We've defined $n_0$ to be the threshold dimension at which Strassen's begins to be more expensive than conventional multiplication. We can make the following assertions:
+$$f(n_0) = s(n_0)$$
+$$\min{\left[f\left(\frac{n_0}{2}\right),s\left(\frac{n_0}{2}\right)\right]} = s\left(\frac{n_0}{2}\right)$$
+
+These assertions allow us to solve for $n_0$:
+$$f(n_0) = 7s\left(\frac{n_0}{2}\right) + 18\left(\frac{n_0}{2}\right)^2 = s(n_0)$$
+$$\longrightarrow n_0 = 15$$
+
+However, this method only holds for $n$ that are powers of 2, since they can be continually divided by 2. We decided to find the thresholds for other dimensions numerically by plugging in various values of $n_0$ and $n$ into the recurrence relations. The table below shows an abbreviated sample of the results. The displayed values for $n$ were chosen to display a combination of prime numbers, odd numbers, even numbers, and powers of 2.\\
 
 \begin{table}[h!]
 \centering
 \renewcommand{\arraystretch}{1.2}
 {\setlength{\tabcolsep}{5pt}
-\begin{tabular}{c|c|c|c|c|c|c|c|c}
-\multirow{2}{*}{$n_0$} & \multicolumn{5}{c}{$n$}\\ \cline{2-9}
-& 2 & 4 & 8 & 16 & 32 & 64 & 128 & 256 \\ \hline
-3 & \cellcolor{green}12 & 156 & 1,380 & 10,812 & 80,292 & 580,476 & 4,137,060 & 29,254,332 \\
-6 & \cellcolor{green}12 & \cellcolor{green}112 & 1,072 & 8,656 & 65,200 & 474,832 & 3,397,552 & 24,077,776 \\
-9 & \cellcolor{green}12 & \cellcolor{green}112 & \cellcolor{green}960 & \cellcolor{green}7,872 & \cellcolor{green}59,712 & \cellcolor{green}436,416 & \cellcolor{green}3,128,640 & \cellcolor{green}22,195,392 \\
-12 & \cellcolor{green}12 & \cellcolor{green}112 & \cellcolor{green}960 & \cellcolor{green}7,872 & \cellcolor{green}59,712 & \cellcolor{green}436,416 & \cellcolor{green}3,128,640 & \cellcolor{green}22,195,392 \\
-15 & \cellcolor{green}12 & \cellcolor{green}112 & \cellcolor{green}960 & \cellcolor{green}7,872 & \cellcolor{green}59,712 & \cellcolor{green}436,416 & \cellcolor{green}3,128,640 & \cellcolor{green}22,195,392 \\
-18 & \cellcolor{green}12 & \cellcolor{green}112 & \cellcolor{green}960 & 7,936 & 60,160 & 439,552 & 3,150,592 & 22,349,056 \\
-21 & \cellcolor{green}12 & \cellcolor{green}112 & \cellcolor{green}960 & 7,936 & 60,160 & 439,552 & 3,150,592 & 22,349,056 \\
-24 & \cellcolor{green}12 & \cellcolor{green}112 & \cellcolor{green}960 & 7,936 & 60,160 & 439,552 & 3,150,592 & 22,349,056 \\
+\begin{tabular}{c|c|c|c|c|c|c|c}
+\multirow{2}{*}{$n_0$} & \multicolumn{7}{c}{$n$}\\ \cline{2-8}
+& 128 & 233 & 413 & 512 & 777 & 950 & 1024 \\ \hline
+4 & 3397552 & 23651014 & 156939994 & 169724080 & 1095552088 & 1171249090 & 1192787152 \\
+8 & \cellcolor{green}3128640 & 21768630 & 105762679 & \cellcolor{green}156547392 & 737310883 & 1079012274 & \cellcolor{green}1100550336 \\
+12 & \cellcolor{green}3128640 & 21768630 & 105762679 & \cellcolor{green}156547392 & 737310883 & 1079012274 & \cellcolor{green}1100550336 \\
+16 & 3150592 & \cellcolor{green}18534483 & \cellcolor{green}87006067 & 157623040 & 606014599 & \cellcolor{green}920539071 & 1108079872 \\
+20 & 3150592 & \cellcolor{green}18534483 & \cellcolor{green}87006067 & 157623040 & 606014599 & \cellcolor{green}920539071 & 1108079872 \\
+24 & 3150592 & \cellcolor{green}18534483 & \cellcolor{green}87006067 & 157623040 & 606014599 & \cellcolor{green}920539071 & 1108079872 \\
+28 & 3150592 & \cellcolor{green}18534483 & 91469526 & 157623040 & \cellcolor{green}572535055 & \cellcolor{green}920539071 & 1108079872 \\
+32 & 3363840 & 19692108 & 91469526 & 168072192 & \cellcolor{green}572535055 & 977262696 & 1181223936 \\
+36 & 3363840 & 19692108 & 91469526 & 168072192 & \cellcolor{green}572535055 & 977262696 & 1181223936 \\
+40 & 3363840 & 19692108 & 91469526 & 168072192 & \cellcolor{green}572535055 & 977262696 & 1181223936 \\
 \end{tabular}}
 \caption{Theoretical Run Time of Modified Strassen's}
 \end{table}
 
-We can see from this analysis that the optimal threshold is around 9-15, as the number of operations we need to do is minimal for these thresholds as $n$ increases. \\
+However, the data shows that the cutoff point for $n$ as powers of two is in the range of 8-15, as predicted by our solution above. For $n$ as other values, the threshold seems to vary around 33, with very occasional exceptions such as $n = 777$, which has a threshold between 25-48.\\
+
+Table 3 presents the dimensions that will be tested in our implementation. The values are intentionally not powers of two in order to examine how different dimensions affect the runtime.
+
+\begin{table}[h]
+\centering
+{\setlength{\tabcolsep}{15pt}
+\begin{tabular}{c|c}
+Dimension & Numerically Solved $n_0$ \\\hline
+600 & 19-37 \\
+800 & 25-49 \\
+1000 & 8-15 \\
+1200 & 19-37 \\
+\end{tabular}}
+\caption{Predicted Threshold Ranges from Numeric Calculations}
+\end{table}
 
 \bigskip
 
-\pagebreak
-
 \textbf{Implementation} \\
-We also attempted to find the threshold experimentally by implementing our modified Strassen's algorithm. To start, we created a new matrix type to encapsulate the information we would need. This type includes a 2D array of ints (representing the matrix itself), the dimension of the matrix, and the start row and start column, which are used to avoid copying large amounts of data when splitting matrices in Strassen's algorithm. In addition, we created basic functions to create a matrix, free the matrix, get / set elements, get the rows / columns, and add matrices (see matrix.c). We also included a function to pretty print the matrix to simplify debugging. \\
+We found the threshold experimentally by implementing our modified Strassen's algorithm. To start, we created a new matrix type to encapsulate the information we would need. This type includes a 2D array of ints (representing the matrix itself), the dimension of the matrix, and the start row and start column, which are used to avoid copying large amounts of data when splitting matrices in Strassen's algorithm. In addition, we created basic functions to create a matrix, free the matrix, get / set elements, get the rows / columns, and add matrices (see matrix.c). We also included a function to pretty print the matrix to simplify debugging. \\
 
 We then moved on to implementing conventional matrix multiplication (see matrixMultiplication.c). This process was also relatively straightforward. Using three nested for loops, we can iterate through all the necessary sums and products to calculate the matrix product. From prior knowledge of caching behavior, we used a column-first method that runs slightly faster than the standard dot product method. This speedup is due to the fact that we have more cache hits in the former than the latter, so we touch memory less frequently, which speeds up our algorithm. \\
 
@@ -104,14 +126,8 @@ Implementing Strassen's algorithm was a bit more technical. We wrote a function 
 
 However, this approach would only work if we did not run into a matrix with odd dimensionality while splitting our matrices. To resolve this issue, we added some padding to our matrix to begin with, so that we would never have to split a matrix with odd dimensions. Instead of simply padding to the next power of two, which we realized would be expensive for large $n$, we realized that once we hit our threshold and started performing conventional matrix multiplication, the dimensions of our matrix no longer mattered. Thus our padding function divided our dimension in half (taking the ceiling if necessary) until we were below our threshold and then multiplied back up to ensure that we could divide evenly when splitting our matrix. \\
 
-With these functions written, we proceeded to collect data by running our algorithm on various dimensions and thresholds. We were particularly interested in how changes in threshold affect runtime, but we also wanted to see whether the dimensionality of the matrix affected the threshold. \\
-
-\bigskip
-
 \textbf{Testing} \\
-We evaluated our algorithm by inputting matrices with known results, using the identity matrix for example. Once we verified the correctness of our conventional matrix multiplication, we could also use it to check that our Strassen's implementation was correct by comparing the output of solely the conventional matrix multiplication function against the result of the Strassen's algorithm.
-
-\pagebreak
+We evaluated our algorithm by inputting matrices with known results, using the identity matrix for example. Once we verified the correctness of our conventional matrix multiplication, we used it to confirm the correctness of our Strassen's implementation by comparing the output of the conventional matrix multiplication function against the result of the Strassen's algorithm. \\
 
 \textbf{Results} \\
 We ran and timed our program on matrices of dimension $600$, $800$, $1000$, and $1200$ with threshold values ranging from $5$ to $395$ at interval $5$. The entire data set is available in appendix A. Below, we have reproduced the data at intervals of $10$ up until $150$. Note that for each threshold-dimension pair, the run time is calculated from the average of 5 runs, and all run times are given in seconds.
@@ -140,7 +156,20 @@ threshold & d = 600 & d = 800 & d = 1000 & d = 1200 \\\hline
 \caption{Run Times of Modified Strassen's for Various Thresholds and Dimensions}
 \end{table}
 
-The trend is difficult to see in a table, but it appears that the low run times appear to be with a threshold of around 20-60. We also plotted all our data on graphs to better visualize the trends (see Figure \ref{results} on next page). \\
+The trend is difficult to see in a table, so the results are summarized in the table below. We also plotted all our data on graphs to better visualize the trends (see Figure \ref{results} on next page).
+
+\begin{table}[h]
+\centering
+{\setlength{\tabcolsep}{15pt}
+\begin{tabular}{c|c}
+Dimension & Experimental $n_0$ \\\hline
+600 & 20-60 \\
+800 & 30-50 \\
+1000 & 20-60 \\
+1200 & 20-40 \\
+\end{tabular}}
+\caption{Experimental Thresholds}
+\end{table}
 
 \begin{figure}
 \centering
@@ -173,11 +202,11 @@ The trend is difficult to see in a table, but it appears that the low run times 
 \label{results}
 \end{figure}
 
-From these plots, we can see that the run times do in fact dip early on, roughly around 20-60 for dimension 600 and 1000 matrices, about 20-45 for dimension 800, and about 20-40 for dimension 1200. Since these times only came from the average of 5 runs, and since run time measurements are inherently slightly variable (resource allocation may easily produce noisy results) we are unable to provide a specific numerical threshold. However, the range 30-50 appears to be roughly optimal for each of these test cases. Much lower or higher than this results in significantly higher run times. \\
+From these plots, we can see that the run times do in fact dip early on, roughly around 20-60 for dimension 600 and 1000 matrices, about 30-50 for dimension 800, and about 20-40 for dimension 1200. Since these times only came from the average of 5 runs, and since run time measurements are inherently slightly variable (resource allocation may easily produce noisy results) we are unable to provide a specific numerical threshold. However, the range 30-50 appears to be roughly optimal for each of these test cases. Much lower or higher than this results in significantly higher run times. \\
 
-We also decided to investigate how our modified Strassen's algorithm compared to standard Strassen's (with base case 1 by 1) and conventional matrix multiplication. The results are shown in Table \ref{table:comp} on the next page. Note that each of these were run only once, the threshold used for modified Strassen's was 40, and standard Strassen's was not run for dim = 800, 1000. \\
+We also decided to investigate how our modified Strassen's algorithm compared to standard Strassen's (with base case 1 by 1) and conventional matrix multiplication. The results are shown in Table \ref{table:comp} below. Note that each of these were run only once, the threshold used for modified Strassen's was 40, and standard Strassen's was not run for dim = 800, 1000. \\
 
-\begin{table}
+\begin{table}[h]
 \centering
 {\setlength{\tabcolsep}{10pt}
 \begin{tabular}{c|c|c|c}
@@ -199,9 +228,9 @@ As we can see, our modified Strassen's algorithm runs faster than the convention
 \pagebreak
 
 \textbf{Discussion} \\
-Our goal was to implement and find the threshold for our modified Strassen's algorithm. Analytically, we rewrote the recurrence equation for our modified algorithm and using dynamic programming, we wrote a script to calculate the number of operations needed to find the matrix product given different dimensions and thresholds. Using this method, we found the cutoff to be around 9-15. Experimentally, we implemented our modified algorithm and tested with various dimensions and values for thresholds. We found that a threshold of about 30-50 was optimal for our implementation. \\
+Our goal was to implement and find the threshold for our modified Strassen's algorithm. Analytically, we rewrote the recurrence equation for our modified algorithm and found the cutoff to be around 9-15 for dimensions of powers of two. Using dynamic programming, we wrote a script to calculate the number of operations needed to find the matrix product given different dimensions and thresholds. Using this method, we confirmed the threshold for powers of 2 and also calculated the thresholds for other dimensions. Experimentally, we implemented our modified algorithm and tested with various dimensions and values for thresholds. We found that a threshold of about 30-50 was optimal for our implementation. \\
 
-We need to consider why there is this discrepancy between our analytical result and our experimental result. First, our analytical result assumed certain costs that may not be consistent with what is true in an experimental setting. For example, we assumed that non-arithmetic operations were free. However, in our implementation, we needed to allocated memory in order to create our matrices. Allocating memory is definitely not a free operation, even though our analytical analysis assumed it was. As a result, we would expect the Strassen's part of our algorithm to take longer experimentally than we would predict given our assumptions. This longer run time would encourage us to switch over to conventional matrix multiplication sooner in our calculations, which is analogous to a higher threshold. \\
+We need to consider why there is a slight discrepancy between our analytical result and our experimental result. First, our analytical result assumed certain costs that may not be consistent with what is true in an experimental setting. For example, we assumed that non-arithmetic operations were free. However, in our implementation, we needed to allocated memory in order to create our matrices. Allocating memory is definitely not a free operation, even though our analytical analysis assumed it was. As a result, we would expect the Strassen's part of our algorithm to take longer experimentally than we would predict given our assumptions. This longer run time would encourage us to switch over to conventional matrix multiplication sooner in our calculations, which is analogous to a higher threshold. \\
 
 Along the same lines, our arithmetic operations may not have cost 1. In reality, calculating basic arithmetic processes would require getting the numbers, which may need to touch memory if not in the cache, perform the operation, and assign the resulting value to some variable. Especially if we have a cache miss, this operation may not always have the same cost. As a result, we would again expect the actual run time to be slower than our prediction, and so we would have a higher threshold. \\
 

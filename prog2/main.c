@@ -111,11 +111,11 @@ int main(int argc, char* argv[]) {
 	} else if (flag == 4) {
 		// Flag 4 generates data
 		// Run with different dimensions
-		for (int dim = 512; dim <= 512; dim *= 2) {
+		for (int dim = 256; dim <= 256; dim *= 2) {
 			// Get appropriate file
 			// NOTE: must generate appropriate file first ("./gen dim" in terminal)
 			char filename[20];
-			sprintf(filename, "testfiles/t%d.txt", dim);
+			sprintf(filename, "testfiles/t2048.txt");
 
 			// Location to place data
 			char outfile[15];
@@ -125,7 +125,7 @@ int main(int argc, char* argv[]) {
 			fclose(f);
 
 			// Run for several thresholds
-			for (int t = 20; t < 150; t += 5) {
+			for (int t = 5; t <= 395; t += 5) {
 				// Keep track of total running time
 				int runTime = 0;
 				int trials = 0;
@@ -136,7 +136,7 @@ int main(int argc, char* argv[]) {
 				// Run for variable number of times
 				// TODO: implement arrays of numbers to test with number times to run
 				// 5 trials each for now
-				for (int run = 0; run < 10; run++, trials++) {
+				for (int run = 0; run < 5; run++, trials++) {
 					runTime += runProg(t, dim, pad, flag, filename);
 				}
 
