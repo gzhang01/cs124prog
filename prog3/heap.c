@@ -15,6 +15,7 @@
 #include "heap.h"
 
 heap* createHeap(int capacity);
+int getSize(heap* h);
 void insert(heap* h, int64_t v);
 int64_t pop(heap* h);
 void freeHeap(heap* h);
@@ -32,6 +33,11 @@ heap* createHeap(int capacity) {
 	h->size = 0;
 	h->capacity = capacity;
 	return h;
+}
+
+// Gets size of heap
+int getSize(heap* h) {
+	return h->size;
 }
 
 // Inserts value v to heap h

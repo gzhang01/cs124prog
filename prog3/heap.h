@@ -18,6 +18,8 @@ typedef struct {
 
 // Creates a heap with given capacity
 heap* createHeap(int capacity);
+// Gets size of heap
+int getSize(heap* h);
 // Inserts value v to heap h
 void insert(heap* h, int64_t v);
 // Pops off the max element in the heap
