@@ -1,5 +1,5 @@
 *.o
-randmst.dSYM/
+*.dSYM/
 *.aux
 *.log
 *.synctex.gz
