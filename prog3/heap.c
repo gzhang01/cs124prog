@@ -17,6 +17,7 @@
 heap* createHeap(int capacity);
 void insert(heap* h, int64_t v);
 int64_t pop(heap* h);
+void freeHeap(heap* h);
 void maxHeapify(heap* h, int i);
 void swap(int64_t* a, int64_t* b);
 int getLeftChild(heap* h, int i);
@@ -64,6 +65,12 @@ int64_t pop(heap* h) {
 	maxHeapify(h, 0);
 
 	return max;
+}
+
+// Frees heap
+void freeHeap(heap* h) {
+	free(h->arr);
+	free(h);
 }
 
 // Rearranges heap rooted at index i to be a max heap
@@ -118,4 +125,3 @@ void printHeap(heap* h) {
 	}
 	printf("\n");
 }
-

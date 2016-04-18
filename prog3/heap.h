@@ -22,3 +22,5 @@ heap* createHeap(int capacity);
 void insert(heap* h, int64_t v);
 // Pops off the max element in the heap
 int64_t pop(heap* h);
+// Frees heap
+void freeHeap(heap* h);
