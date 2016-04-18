@@ -11,7 +11,7 @@
 #include <stdint.h>
 
 typedef struct {
-	int64_t* arr;
+	uint64_t* arr;
 	int size;
 	int capacity;
 } heap;
@@ -21,8 +21,10 @@ heap* createHeap(int capacity);
 // Gets size of heap
 int getSize(heap* h);
 // Inserts value v to heap h
-void insert(heap* h, int64_t v);
+void insert(heap* h, uint64_t v);
 // Pops off the max element in the heap
-int64_t pop(heap* h);
+uint64_t pop(heap* h);
 // Frees heap
 void freeHeap(heap* h);
+// Pretty prints the heap as an array
+void printHeap(heap* h);

@@ -16,11 +16,11 @@
 
 heap* createHeap(int capacity);
 int getSize(heap* h);
-void insert(heap* h, int64_t v);
-int64_t pop(heap* h);
+void insert(heap* h, uint64_t v);
+uint64_t pop(heap* h);
 void freeHeap(heap* h);
 void maxHeapify(heap* h, int i);
-void swap(int64_t* a, int64_t* b);
+void swap(uint64_t* a, uint64_t* b);
 int getLeftChild(heap* h, int i);
 int getRightChild(heap* h, int i);
 int getParent(heap* h, int i);
@@ -29,7 +29,7 @@ void printHeap(heap* h);
 // Creates a heap with given capacity
 heap* createHeap(int capacity) {
 	heap* h = malloc(sizeof(heap));
-	h->arr = calloc(capacity, sizeof(int64_t));
+	h->arr = calloc(capacity, sizeof(uint64_t));
 	h->size = 0;
 	h->capacity = capacity;
 	return h;
@@ -41,7 +41,7 @@ int getSize(heap* h) {
 }
 
 // Inserts value v to heap h
-void insert(heap* h, int64_t v) {
+void insert(heap* h, uint64_t v) {
 	// If size has reached capacity, expand array
 	if (h->size >= h->capacity) {
 		h->arr = realloc(h->arr, h->capacity * 2);
@@ -61,10 +61,10 @@ void insert(heap* h, int64_t v) {
 }
 
 // Pops off the max element in the heap
-int64_t pop(heap* h) {
+uint64_t pop(heap* h) {
 	assert(h->size != 0);
 	h->size--;
-	int64_t max = h->arr[0];
+	uint64_t max = h->arr[0];
 
 	// Assign last node to root and reheapify
 	h->arr[0] = h->arr[h->size];
@@ -103,8 +103,8 @@ void maxHeapify(heap* h, int i) {
 }
 
 // Swaps two values in heap
-void swap(int64_t* a, int64_t* b) {
-	int64_t tmp = *a;
+void swap(uint64_t* a, uint64_t* b) {
+	uint64_t tmp = *a;
 	*a = *b;
 	*b = tmp;
 }
