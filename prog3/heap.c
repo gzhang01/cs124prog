@@ -111,12 +111,12 @@ void swap(uint64_t* a, uint64_t* b) {
 
 // Gets left child of node at index i
 int getLeftChild(heap* h, int i) {
-	return (2 * i + 1 <= h->capacity) ? 2 * i + 1 : -1;
+	return (2 * i + 1 <= h->size) ? 2 * i + 1 : -1;
 }
 
 // Gets right child of node at index i
 int getRightChild(heap* h, int i) {
-	return (2 * i + 2 <= h->capacity) ? 2 * i + 2 : -1;
+	return (2 * i + 2 <= h->size) ? 2 * i + 2 : -1;
 }
 
 // Gets parent of node at index i
