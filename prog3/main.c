@@ -305,6 +305,11 @@ void runSample() {
 }
 
 void part2() {
+    // Seed RNG
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    srand((unsigned) tv.tv_usec);
+
     // Wiping any existing data
     FILE* f = fopen("data.csv", "w");
     if (f == NULL) {
@@ -328,11 +333,34 @@ void part2() {
 }
 
 int main(int argc, char* argv[]) {
-    // Seed RNG
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-    srand((unsigned) tv.tv_usec);
+    if (argc != 2) {
+        printf("Usage: ./kk inputfile\n");
+        return 1;
+    }
 
+    char* file = argv[1];
+    int n = 100;
+
+    // Read numbers from file
+    FILE* f = fopen(file, "r");
+    if (f == NULL) {
+        printf("Could not open file\n");
+        return 1;
+    }
+
+    // Input numbers into array nums
+    uint64_t* nums = malloc(sizeof(uint64_t) * n);
+    char* line = NULL;
+    size_t read, len, i = 0;
+    while ((read = getline(&line, &len, f)) != -1) {
+        nums[i] = strtoull(line, NULL, 10);
+        i++;
+    }
+    
+    fclose(f);
+
+    printf("%llu\n", kk(nums, n));
+    free(nums);
 
     // part2();
     
