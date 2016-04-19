@@ -37,8 +37,15 @@ int* sequenceGenerate(int n) {
 // Produces a random neighbor of a sequence
 // Returns mutated sequence
 int* sequenceNeighbor(int* s, int n) {
+	// Produce neighbor
+	int* neighbor = malloc(sizeof(int) * n);
+	for (int i = 0; i < n; i++) {
+		neighbor[i] = s[i];
+	}
+
+	// Change sequence
 	int i = rand() % n;
-	s[i] = -s[i];
+	neighbor[i] = -neighbor[i];
 
 	// Change second one with probability 0.5
 	if ((double) rand() / RAND_MAX > 0.5) {
@@ -46,10 +53,10 @@ int* sequenceNeighbor(int* s, int n) {
 		while (j == i) {
 			j = rand() % n;
 		}
-		s[j] = -s[j];
+		neighbor[j] = -neighbor[j];
 	}
 
-	return s;
+	return neighbor;
 }
 
 // Generates a random prepartitioning (using [0, n))
@@ -74,17 +81,24 @@ int* partitionGenerate(int n) {
 // Produces a random neighbor of a sequence
 // Returns mutated sequence
 int* partitionNeighbor(int* s, int n) {
+	// Produce neighbor
+	int* neighbor = malloc(sizeof(int) * n);
+	for (int i = 0; i < n; i++) {
+		neighbor[i] = s[i];
+	}
+
+	// Produce neighbor
 	int i = rand() % n;
-	int j = s[i];
+	int j = neighbor[i];
 
 	// Ensure that different number gets assigned
-	while (j == s[i]) {
+	while (j == neighbor[i]) {
 		j = rand() % n;
 	}
 
-	s[i] = j;
+	neighbor[i] = j;
 
-	return s;
+	return neighbor;
 }
 
 // Converts a sequence solution into a partition solution
