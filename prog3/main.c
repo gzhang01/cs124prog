@@ -327,7 +327,7 @@ void part2() {
     }
 }
 
-int main(void) {
+int main(int argc, char* argv[]) {
     // Seed RNG
     struct timeval tv;
     gettimeofday(&tv, NULL);

@@ -3,14 +3,14 @@ CFLAGS=-c -Wall -g
 
 all: kk
 
-kk: heap.o kk.o solution.o
-	$(CC) heap.o kk.o solution.o -o kk
+kk: heap.o main.o solution.o
+	$(CC) heap.o main.o solution.o -o kk
 
 heap.o: heap.c
 	$(CC) $(CFLAGS) heap.c
 
-kk.o: kk.c
-	$(CC) $(CFLAGS) kk.c
+main.o: main.c
+	$(CC) $(CFLAGS) main.c
 
 solution.o: solution.c
 	$(CC) $(CFLAGS) solution.c
