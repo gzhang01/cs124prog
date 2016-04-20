@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 data = []
-with open("data.csv", "r") as f:
+with open("../data/data.csv", "r") as f:
 	for line in f:
 		data.append(line[:-1].split(","))
 
@@ -32,5 +32,5 @@ plt.scatter(x, y, color=colors)
 plt.xticks(x, labels)
 plt.ylim([1,100000000000000])
 plt.yscale('log')
-plt.savefig('residues.png')
+plt.savefig('../img/residues.png')
 plt.show()

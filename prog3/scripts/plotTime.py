@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 data = []
-with open("times.csv", "r") as f:
+with open("../data/times.csv", "r") as f:
 	for line in f:
 		data.append(line[:-1].split(","))
 
@@ -33,5 +33,5 @@ plt.scatter(x, y, color=colors)
 plt.xticks(x, labels)
 plt.ylim([10,2500])
 plt.yscale('log')
-plt.savefig('times.png')
+plt.savefig('../img/times.png')
 plt.show()
