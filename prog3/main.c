@@ -88,6 +88,15 @@ uint64_t repeatedRandom(uint64_t* nums, int* start, int n, int isSequence) {
             } else {
                 free(randomSolution);
             }
+
+            // Write results
+            FILE* f = fopen("data/rrs.csv", "a");
+            if (f == NULL) {
+                printf("Could not open rrs.csv\n");
+                return -1;
+            }
+            fprintf(f, "%i,%llu,%llu\n", i, bestResidue, residue);
+            fclose(f);
         }
         free(s);
         return bestResidue;
@@ -106,6 +115,15 @@ uint64_t repeatedRandom(uint64_t* nums, int* start, int n, int isSequence) {
             } else {
                 free(randomSolution);
             }
+
+                        // Write results
+            FILE* f = fopen("data/rrp.csv", "a");
+            if (f == NULL) {
+                printf("Could not open rrp.csv\n");
+                return -1;
+            }
+            fprintf(f, "%i,%llu,%llu\n", i, bestResidue, residue);
+            fclose(f);
         }
         free(s);
         return bestResidue;
@@ -135,6 +153,15 @@ uint64_t hillClimbing(uint64_t* nums, int* start, int n, int isSequence) {
             } else {
                 free(neighbor);
             }
+
+            // Write results
+            FILE* f = fopen("data/hcs.csv", "a");
+            if (f == NULL) {
+                printf("Could not open hcs.csv\n");
+                return -1;
+            }
+            fprintf(f, "%i,%llu,%llu\n", i, bestResidue, residue);
+            fclose(f);
         }
         free(s);
         return bestResidue;
@@ -153,6 +180,15 @@ uint64_t hillClimbing(uint64_t* nums, int* start, int n, int isSequence) {
             } else {
                 free(neighbor);
             }
+
+            // Write results
+            FILE* f = fopen("data/hcp.csv", "a");
+            if (f == NULL) {
+                printf("Could not open hcp.csv\n");
+                return -1;
+            }
+            fprintf(f, "%i,%llu,%llu\n", i, bestResidue, residue);
+            fclose(f);
         }
         free(s);
         return bestResidue;
@@ -199,6 +235,15 @@ uint64_t simulatedAnnealing(uint64_t* nums, int* start, int n, int isSequence) {
                     bestS[j] = s[j];
                 }
             }
+
+            // Write results
+            FILE* f = fopen("data/sas.csv", "a");
+            if (f == NULL) {
+                printf("Could not open sas.csv\n");
+                return -1;
+            }
+            fprintf(f, "%i,%llu,%llu,%llu\n", i, bestResidue, sResidue, residue);
+            fclose(f);
         }
         free(s);
         free(bestS);
@@ -227,6 +272,15 @@ uint64_t simulatedAnnealing(uint64_t* nums, int* start, int n, int isSequence) {
                     bestS[j] = s[j];
                 }
             }
+
+            // Write results
+            FILE* f = fopen("data/sap.csv", "a");
+            if (f == NULL) {
+                printf("Could not open sap.csv\n");
+                return -1;
+            }
+            fprintf(f, "%i,%llu,%llu,%llu\n", i, bestResidue, sResidue, residue);
+            fclose(f);
         }
         free(s);
         free(bestS);
@@ -274,7 +328,7 @@ void runSample() {
     gettimeofday(&times[8], NULL);
     results[8] = simulatedAnnealing(nums, p, n, 0);
     gettimeofday(&times[9], NULL);
-
+    return;
     // Difference between times
     int diff[9];
     for (int i = 0; i < 9; i++) {
@@ -282,7 +336,7 @@ void runSample() {
     }
 
     // Writing data and times to file
-    FILE* f = fopen("data.csv", "a");
+    FILE* f = fopen("data/data.csv", "a");
     if (f == NULL) {
         printf("Error opening file\n");
         return;
@@ -290,7 +344,7 @@ void runSample() {
     fprintf(f, "%lld,%lld,%lld,%lld,%lld,%lld,%lld,%lld,%lld\n", results[0], results[1], results[2], results[3], results[4], results[5], results[6], results[7], results[8]);
     fclose(f);
 
-    f = fopen("times.csv", "a");
+    f = fopen("data/times.csv", "a");
     if (f == NULL) {
         printf("Error opening file\n");
         return;
@@ -311,18 +365,18 @@ void part2() {
     srand((unsigned) tv.tv_usec);
 
     // Wiping any existing data
-    FILE* f = fopen("data.csv", "w");
-    if (f == NULL) {
-        printf("Error opening file\n");
-        return;
-    }
-    fclose(f);
-    f = fopen("times.csv", "w");
-    if (f == NULL) {
-        printf("Error opening file\n");
-        return;
-    }
-    fclose(f);
+    // FILE* f = fopen("data/data.csv", "w");
+    // if (f == NULL) {
+    //     printf("Error opening file\n");
+    //     return;
+    // }
+    // fclose(f);
+    // f = fopen("data/times.csv", "w");
+    // if (f == NULL) {
+    //     printf("Error opening file\n");
+    //     return;
+    // }
+    // fclose(f);
 
     // Collect data 50 times
     for (int i = 0; i < 50; i++) {
@@ -362,7 +416,7 @@ int main(int argc, char* argv[]) {
     printf("%llu\n", kk(nums, n));
     free(nums);
 
-    // part2();
+    part2();
     
     
 }
