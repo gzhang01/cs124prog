@@ -90,13 +90,13 @@ uint64_t repeatedRandom(uint64_t* nums, int* start, int n, int isSequence) {
             }
 
             // Write results
-            FILE* f = fopen("data/rrs.csv", "a");
-            if (f == NULL) {
-                printf("Could not open rrs.csv\n");
-                return -1;
-            }
-            fprintf(f, "%i,%llu,%llu\n", i, bestResidue, residue);
-            fclose(f);
+            // FILE* f = fopen("data/rrs.csv", "a");
+            // if (f == NULL) {
+            //     printf("Could not open rrs.csv\n");
+            //     return -1;
+            // }
+            // fprintf(f, "%i,%llu,%llu\n", i, bestResidue, residue);
+            // fclose(f);
         }
         free(s);
         return bestResidue;
@@ -117,13 +117,13 @@ uint64_t repeatedRandom(uint64_t* nums, int* start, int n, int isSequence) {
             }
 
                         // Write results
-            FILE* f = fopen("data/rrp.csv", "a");
-            if (f == NULL) {
-                printf("Could not open rrp.csv\n");
-                return -1;
-            }
-            fprintf(f, "%i,%llu,%llu\n", i, bestResidue, residue);
-            fclose(f);
+            // FILE* f = fopen("data/rrp.csv", "a");
+            // if (f == NULL) {
+            //     printf("Could not open rrp.csv\n");
+            //     return -1;
+            // }
+            // fprintf(f, "%i,%llu,%llu\n", i, bestResidue, residue);
+            // fclose(f);
         }
         free(s);
         return bestResidue;
@@ -155,13 +155,13 @@ uint64_t hillClimbing(uint64_t* nums, int* start, int n, int isSequence) {
             }
 
             // Write results
-            FILE* f = fopen("data/hcs.csv", "a");
-            if (f == NULL) {
-                printf("Could not open hcs.csv\n");
-                return -1;
-            }
-            fprintf(f, "%i,%llu,%llu\n", i, bestResidue, residue);
-            fclose(f);
+            // FILE* f = fopen("data/hcs.csv", "a");
+            // if (f == NULL) {
+            //     printf("Could not open hcs.csv\n");
+            //     return -1;
+            // }
+            // fprintf(f, "%i,%llu,%llu\n", i, bestResidue, residue);
+            // fclose(f);
         }
         free(s);
         return bestResidue;
@@ -182,13 +182,13 @@ uint64_t hillClimbing(uint64_t* nums, int* start, int n, int isSequence) {
             }
 
             // Write results
-            FILE* f = fopen("data/hcp.csv", "a");
-            if (f == NULL) {
-                printf("Could not open hcp.csv\n");
-                return -1;
-            }
-            fprintf(f, "%i,%llu,%llu\n", i, bestResidue, residue);
-            fclose(f);
+            // FILE* f = fopen("data/hcp.csv", "a");
+            // if (f == NULL) {
+            //     printf("Could not open hcp.csv\n");
+            //     return -1;
+            // }
+            // fprintf(f, "%i,%llu,%llu\n", i, bestResidue, residue);
+            // fclose(f);
         }
         free(s);
         return bestResidue;
@@ -220,7 +220,7 @@ uint64_t simulatedAnnealing(uint64_t* nums, int* start, int n, int isSequence) {
             uint64_t residue = sequenceResidue(nums, neighbor, n);
 
             // If better or within probability, replace
-            if (residue < sResidue || (double) rand() / RAND_MAX < exp((sResidue - residue) / cooling(i))) {
+            if (residue < sResidue || (double) rand() / RAND_MAX < exp((int64_t) (sResidue - residue) / cooling(i))) {
                 sResidue = residue;
                 free(s);
                 s = neighbor;
@@ -237,13 +237,13 @@ uint64_t simulatedAnnealing(uint64_t* nums, int* start, int n, int isSequence) {
             }
 
             // Write results
-            FILE* f = fopen("data/sas.csv", "a");
-            if (f == NULL) {
-                printf("Could not open sas.csv\n");
-                return -1;
-            }
-            fprintf(f, "%i,%llu,%llu,%llu\n", i, bestResidue, sResidue, residue);
-            fclose(f);
+            // FILE* f = fopen("data/sas.csv", "a");
+            // if (f == NULL) {
+            //     printf("Could not open sas.csv\n");
+            //     return -1;
+            // }
+            // fprintf(f, "%i,%llu,%llu,%llu\n", i, bestResidue, sResidue, residue);
+            // fclose(f);
         }
         free(s);
         free(bestS);
@@ -257,7 +257,7 @@ uint64_t simulatedAnnealing(uint64_t* nums, int* start, int n, int isSequence) {
             uint64_t residue = partitionResidue(nums, neighbor, n);
 
             // If better or within probability, replace
-            if (residue < sResidue || (double) rand() / RAND_MAX < exp((sResidue - residue) / cooling(i))) {
+            if (residue < sResidue || (double) rand() / RAND_MAX < exp((int64_t) (sResidue - residue) / cooling(i))) {
                 sResidue = residue;
                 free(s);
                 s = neighbor;
@@ -274,13 +274,13 @@ uint64_t simulatedAnnealing(uint64_t* nums, int* start, int n, int isSequence) {
             }
 
             // Write results
-            FILE* f = fopen("data/sap.csv", "a");
-            if (f == NULL) {
-                printf("Could not open sap.csv\n");
-                return -1;
-            }
-            fprintf(f, "%i,%llu,%llu,%llu\n", i, bestResidue, sResidue, residue);
-            fclose(f);
+            // FILE* f = fopen("data/sap.csv", "a");
+            // if (f == NULL) {
+            //     printf("Could not open sap.csv\n");
+            //     return -1;
+            // }
+            // fprintf(f, "%i,%llu,%llu,%llu\n", i, bestResidue, sResidue, residue);
+            // fclose(f);
         }
         free(s);
         free(bestS);
@@ -328,7 +328,7 @@ void runSample() {
     gettimeofday(&times[8], NULL);
     results[8] = simulatedAnnealing(nums, p, n, 0);
     gettimeofday(&times[9], NULL);
-    return;
+
     // Difference between times
     int diff[9];
     for (int i = 0; i < 9; i++) {
@@ -416,7 +416,7 @@ int main(int argc, char* argv[]) {
     printf("%llu\n", kk(nums, n));
     free(nums);
 
-    part2();
+    // part2();
     
     
 }
