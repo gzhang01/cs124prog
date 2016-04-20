@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-file = "hcp"
+file = "rrp"
 
 data = []
 with open("../data/" + file + ".csv", "r") as f:
@@ -25,7 +25,7 @@ splt.set_xlabel('Iteration')
 splt.set_ylabel('Residue')
 plt.scatter(x, residue, color="blue")
 plt.scatter(x, bestResidue, color="green")
-# plt.ylim([10**8,25000000000000])
+plt.ylim([10**0,10**14])
 plt.yscale('log')
 plt.savefig("../img/" + file + ".png")
 plt.show()
